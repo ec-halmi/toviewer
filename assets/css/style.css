@@ -1,0 +1,47 @@
+html,
+body {
+  font-size: 12px;
+}
+
+.toast {
+  position: relative;
+  /* display: block; */
+}
+
+.sidepanel {
+  /* height: 100vh; */
+  /* width: 100%; */
+  padding: 10px;
+}
+
+.sidepanel ul {
+  margin: 0;
+}
+
+.sidepanel,
+.sidepanel a {
+  color: #fff !important;
+}
+
+.sidepanel-box {
+  background-color: #0257ac9c;
+  width: 350px;
+}
+
+.sidepanel-box .btn {
+  margin-bottom: 6px;
+  width: 100px;
+}
+
+/* accoordians */
+.sidepanel .accordion-body {
+  padding: 10px 14px;
+}
+
+.sidepanel .accordion-button {
+  padding: 10px 16px;
+}
+
+.sidepanel .material-symbols-rounded {
+  font-size: 20px;
+}

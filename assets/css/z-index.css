@@ -1,0 +1,25 @@
+.toast {
+  z-index: 10;
+}
+
+#sidepanel {
+  position: relative;
+  z-index: 10;
+}
+
+.viewer#viewer {
+  z-index: 5;
+}
+
+#overlay {
+  /* Place overlay above other content */
+  z-index: 100;
+}
+
+#toolbar {
+  z-index: 10;
+}
+
+#footer {
+  z-index: 10;
+}

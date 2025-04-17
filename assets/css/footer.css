@@ -1,0 +1,12 @@
+#footer {
+  background-color: #0000007a;
+  color: #fff;
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  padding: 3px 6px;
+}
+
+#status-bar {
+  float: right;
+}
