@@ -10,6 +10,7 @@ const container = document.getElementById("viewer");
 
 // Inits
 const components = new OBC.Components();
+components.OBCF = OBCF;
 
 const worlds = components.get(OBC.Worlds);
 const world = worlds.create();
@@ -20,6 +21,9 @@ world.renderer = new OBCF.PostproductionRenderer(components, container);
 world.camera = new OBC.SimpleCamera(components);
 
 const fileloader = new FileLoader(components, world, container);
+
+// init nulls
+var highlightloader = null;
 
 const ifcFileUrl = "/models/RVT23_NBeS-3.01_aPT-3 STY SEMI D_240914.ifc"; // URL to the Flask API endpoint
 // const ifcFileUrl = "/models/RVT23_NBeS-4.0_aPT-SCHOOL_250403.ifc"; // URL to the Flask API endpoint
@@ -34,7 +38,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         // hide space by default
         const spaceItems = await fileloader.classifyByCategory(model, "IFCSPACE");
 
-        const highlightloader = new HighlightLoader(components, world);
+        highlightloader = new HighlightLoader(components, world);
         highlightloader.hideHandler(spaceItems, false, "Space items");
 
         console.log("IFC file loaded successfully.");
@@ -45,7 +49,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     }).then((model) => {
       // loads highlight
-      const toolbarLoader = new ToolBarLoader(components, world);
+      const toolbarLoader = new ToolBarLoader(components, world, highlightloader);
     })
     .catch((error) => {
       console.error("An unexpected error occurred:", error);
