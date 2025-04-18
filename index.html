@@ -26,7 +26,7 @@
       </div>
     </div>
 
-    <div id="viewer" class="viewer"></div>
+    <div id="viewer" class="viewer" tabindex="2"></div>
 
     <div id="toolbar" class="navbar navbar-expand-sm bg-body-tertiary">
       <div class="container-fluid">
@@ -48,8 +48,8 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link  border border-1 rounded item-icon" aria-current="page" href="#"
-                data-name="length-utils">
+              <a id="tool-icon-measurement" class="nav-link border border-1 rounded item-icon" aria-current="page"
+                href="#" data-name="measurement-tools">
                 <span class="material-symbols-outlined">design_services</span>
                 <span class="tooltiptext">Length Measurement</span>
               </a>
@@ -69,29 +69,38 @@
     <div id="sidepanel" class="sidepanel">
       <div id="measurement-panel" class="sidepanel-box float-end">
         <div class="card">
-          <div class="card-header text-bg-secondary">
-            <h5>Measurement Tools</h5>
+          <div class="card-header text-bg-secondary d-flex align-items-center">
+            <div class="d-flex">
+              <span class="material-symbols-rounded">square_foot</span>
+              <h5 class="m-0 ms-1">Measurement Tools</h5>
+            </div>
           </div>
           <div class="card-body">
             <div class="m-auto">
             </div>
 
-            <input type="radio" class="btn-check" name="btn-measurement" id="btn-measurement-angle" autocomplete="off">
+            <input type="radio" class="btn-check btn-measurement" name="btn-measurement" id="btn-measurement-angle"
+              autocomplete="off">
             <label class="btn btn-outline-primary" for="btn-measurement-angle">Angle</label>
 
-            <input type="radio" class="btn-check" name="btn-measurement" id="btn-measurement-area" autocomplete="off">
+            <input type="radio" class="btn-check btn-measurement" name="btn-measurement" id="btn-measurement-area"
+              autocomplete="off">
             <label class="btn btn-outline-primary" for="btn-measurement-area">Area</label>
 
-            <input type="radio" class="btn-check" name="btn-measurement" id="btn-measurement-edge" autocomplete="off">
+            <input type="radio" class="btn-check btn-measurement" name="btn-measurement" id="btn-measurement-edge"
+              autocomplete="off">
             <label class="btn btn-outline-primary" for="btn-measurement-edge">Edge</label>
 
-            <input type="radio" class="btn-check" name="btn-measurement" id="btn-measurement-face" autocomplete="off">
+            <input type="radio" class="btn-check btn-measurement" name="btn-measurement" id="btn-measurement-face"
+              autocomplete="off">
             <label class="btn btn-outline-primary" for="btn-measurement-face">Face</label>
 
-            <input type="radio" class="btn-check" name="btn-measurement" id="btn-measurement-length" autocomplete="off">
+            <input type="radio" class="btn-check btn-measurement" name="btn-measurement" id="btn-measurement-length"
+              autocomplete="off">
             <label class="btn btn-outline-primary" for="btn-measurement-length">Length</label>
 
-            <input type="radio" class="btn-check" name="btn-measurement" id="btn-measurement-volume" autocomplete="off">
+            <input type="radio" class="btn-check btn-measurement" name="btn-measurement" id="btn-measurement-volume"
+              autocomplete="off">
             <label class="btn btn-outline-primary" for="btn-measurement-volume">Volume</label>
             <div class="btn-group" role="group" aria-label="Measurement tools">
             </div>
@@ -102,14 +111,17 @@
 
             <div class="mt-3">
               <ul>
-                <li>Double click to add new dimension.</li>
-                <li>To delete 1 dimension, click on it and press keyboard Shift+Backspace.</li>
+                <li>Double click to add new dimension or dimension points.</li>
+                <li>To delete a dimension, click on it and press keyboard Shift+Backspace.</li>
                 <li>Click the button below to clear dimension.</li>
               </ul>
             </div>
           </div>
           <div class=" card-footer text-body-secondary text-end d-flex align-items-center">
-            <span>Clear</span> <span class="material-symbols-rounded">delete</span>
+
+            <div class="d-flex ms-auto">
+              <span>Clear</span> <span id="measurement-clear" class="material-symbols-rounded">delete</span>
+            </div>
           </div>
         </div>
       </div>
