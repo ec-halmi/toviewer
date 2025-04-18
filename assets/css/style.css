@@ -45,3 +45,8 @@ body {
 .sidepanel .material-symbols-rounded {
   font-size: 20px;
 }
+
+/* measurement tools */
+#measurement-panel {
+  display: none;
+}
