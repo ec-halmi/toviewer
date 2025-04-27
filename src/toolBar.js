@@ -85,9 +85,9 @@ export class ToolBarLoader {
 
       const visibilityLoader = new VisibilityLoader(this.component, this.world, this.model);
       if (btnStatus) { // true
-        await visibilityLoader.enable(box);
+        await visibilityLoader.enable(box, true);
       } else { // false
-        await visibilityLoader.enable(false);
+        await visibilityLoader.enable(box, false);
       }
     });
   }
