@@ -5,15 +5,26 @@ import * as OBC from "@thatopen/components";
 import * as THREE from "three";
 
 export class FileLoader {
-  constructor(components, world, container) {
-    this.components = components;
-    this.world = world;
+  constructor(component, container) {
+    this.component = component;
 
-    this.components.init();
+    const worlds = component.get(this.component.OBC.Worlds);
+    // this.world = world;
+    this.world = worlds.create();
+    this.world.container = container; // assign to global
+
+    this.world.scene = new this.component.OBC.SimpleScene(this.component);
+    this.world.renderer = new this.component.OBCF.PostproductionRenderer(this.component, this.world.container);
+    this.world.camera = new this.component.OBC.OrthoPerspectiveCamera(this.component);
+
+
+    this.component.init();
 
     // fragments
-    // this.fragments = this.components.get(OBC.FragmentsManager);
-    this.fragmentIfcLoader = this.components.get(OBC.IfcLoader);
+    this.fragmentIfcLoader = this.component.get(OBC.IfcLoader);
+
+    this.fragmentIfcLoader.setup();
+    this.fragmentIfcLoader.settings.webIfc.COORDINATE_TO_ORIGIN = true;
   }
 
   async loadIFC(url) {
@@ -32,18 +43,9 @@ export class FileLoader {
 
       this.world.scene.setup();
 
-      const grids = this.components.get(OBC.Grids);
+      const grids = this.component.get(OBC.Grids);
       const grid = grids.create(this.world);
-      grid.config.color = new THREE.Color("#949494");
-      grid.config.primarySize = 2;
-      grid.config.secondarySize = 10;
       this.world.renderer.postproduction.customEffects.excludedMeshes.push(grid.three);
-
-      // this.world.scene.three.background = new THREE.Color(0x87CEEB);
-      // this.world.scene.three.background = null;
-
-      await this.fragmentIfcLoader.setup();
-      this.fragmentIfcLoader.settings.webIfc.COORDINATE_TO_ORIGIN = true;
 
       //   Optionally exclude categories that we don't want to convert to fragments like very easily:
       const excludedCats = [
@@ -63,11 +65,14 @@ export class FileLoader {
       // Load the IFC model
       const model = await this.fragmentIfcLoader.load(int8ArrayBuffer);
       // console.log(model);
-      model.name = "example";
-      this.world.meshes.add(model);
+      model.name = "nbes";
       this.world.scene.three.add(model);
+      this.world.meshes.add(model);
+      console.log('Model', model);
 
-      return model;
+      this.world.model = model;
+
+      return { world: this.world, model }; // @test
 
       // If the response is successful, return true
     } catch (error) {
@@ -81,13 +86,13 @@ export class FileLoader {
     }
   }
 
-  async classifyByCategory(model, category) {
-    const classifier = this.components.get(OBC.Classifier);
+  classifyByCategory(model, category) {
+    const classifier = this.component.get(OBC.Classifier);
     classifier.byEntity(model);
 
-    const getItems = await classifier.find({ entities: [category] });
+    const getItems = classifier.find({ entities: [category] });
 
-    classifier.dispose();
+    // classifier.dispose();
 
     return getItems;
   }
