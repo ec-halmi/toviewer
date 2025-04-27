@@ -10,17 +10,10 @@ const container = document.getElementById("viewer");
 
 // Inits
 const components = new OBC.Components();
+components.OBC = OBC;
 components.OBCF = OBCF;
 
-const worlds = components.get(OBC.Worlds);
-const world = worlds.create();
-world.container = container; // assign to global
-
-world.scene = new OBC.SimpleScene(components);
-world.renderer = new OBCF.PostproductionRenderer(components, container);
-world.camera = new OBC.SimpleCamera(components);
-
-const fileloader = new FileLoader(components, world, container);
+const fileloader = new FileLoader(components, container); // debug
 
 // init nulls
 var highlightloader = null;
@@ -33,23 +26,22 @@ document.addEventListener('DOMContentLoaded', async () => {
   console.log("Loading viewer...");
 
   fileloader.loadIFC(ifcFileUrl)
-    .then(async (model) => {
-      if (model) {
+    .then(loader => {
+      if (loader) {
         // hide space by default
-        const spaceItems = await fileloader.classifyByCategory(model, "IFCSPACE");
+        const spaceItems = fileloader.classifyByCategory(loader.model, "IFCSPACE");
 
-        highlightloader = new HighlightLoader(components, world);
-        highlightloader.hideHandler(spaceItems, false, "Space items");
+        highlightloader = new HighlightLoader(components, loader.world); // get highligther
+        highlightloader.hideHandler(spaceItems, false, "Space items"); // hide by fragments
 
         console.log("IFC file loaded successfully.");
 
-        return model;
+        return loader;
       } else {
         console.log("Failed to load IFC file.");
       }
-    }).then((model) => {
-      // loads highlight
-      const toolbarLoader = new ToolBarLoader(components, world, highlightloader);
+    }).then(loader => {
+      const toolbarLoader = new ToolBarLoader(components, loader.world, loader.model, highlightloader);
     })
     .catch((error) => {
       console.error("An unexpected error occurred:", error);
