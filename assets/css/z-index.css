@@ -3,12 +3,15 @@
 }
 
 #sidepanel {
-  position: relative;
   z-index: 10;
 }
 
 .viewer#viewer {
   z-index: 5;
+}
+
+#minimap {
+  z-index: 7;
 }
 
 #overlay {
