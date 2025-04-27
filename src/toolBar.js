@@ -1,14 +1,95 @@
 import { MeasurementsLoader } from "./measurementsLoader";
+import { VisibilityLoader } from "./visibilityLoader";
+import { MiniMapLoader } from "./minimapLoader";
+import { PlansLoader } from "./plansLoader";
 
 export class ToolBarLoader {
-  constructor(component, world, highlight) {
+  constructor(component, world, model, highlight) {
     this.component = component;
     this.world = world;
+    this.model = model
     this.highlight = highlight;
 
     this.btnResetCamera();
+
     const measurementPanelName = "measurement-panel";
     this.btnMeasurementTools(measurementPanelName);
+
+    // visibility
+    // show/hide elements by storey, ifc category, with reset view button
+    this.btnVisibility();
+
+    // minimap
+    this.btnMiniMap();
+
+    // floorplans
+    this.btnFloorPlans();
+  }
+
+  /**
+   * 
+  */
+  btnFloorPlans() {
+    const iconBtn = document.getElementById("tool-icon-plans");
+
+    const plansLoader = new PlansLoader(this.component, this.world, this.model);
+
+    iconBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+
+      const btnStatus = this.toggleBtnActiveClass(iconBtn);
+
+      if (btnStatus) {
+        plansLoader.enable();
+      } else {
+        plansLoader.disable();
+      }
+    });
+  }
+
+
+  /** enable minimap
+   * 
+   * show status box
+   */
+  btnMiniMap() {
+    const iconBtn = document.getElementById("tool-icon-minimap");
+
+    const miniMapLoader = new MiniMapLoader(this.component, this.world, this.model);
+
+    iconBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+
+      const btnStatus = this.toggleBtnActiveClass(iconBtn);
+      if (btnStatus) { // true
+        miniMapLoader.enable();
+      } else { // false
+        miniMapLoader.disable();
+      }
+    })
+  }
+
+  /** Provide visibility control
+   * 
+   * show/hide storey, ifc categories
+   */
+  btnVisibility() {
+    // hide box by default
+    const box = document.getElementById("visibility-panel");
+    box.style.display = "none";
+
+    const iconBtn = document.getElementById("tool-icon-visibility");
+
+    iconBtn.addEventListener("click", async (e) => {
+      const btnStatus = this.toggleBtnActiveClass(iconBtn);
+
+      const visibilityLoader = new VisibilityLoader(this.component, this.world, this.model);
+      if (btnStatus) { // true
+        await visibilityLoader.enable(box);
+      } else { // false
+        await visibilityLoader.enable(false);
+      }
+    });
   }
 
   btnResetCamera() {
@@ -61,5 +142,5 @@ export class ToolBarLoader {
         return true;
       }
     }
-  }
+  } // ~toggleBtnActiveClass
 }
