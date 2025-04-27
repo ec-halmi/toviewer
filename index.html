@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="/assets/css/tooltip.css">
     <link rel="stylesheet" href="/assets/css/footer.css">
     <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/panels.css">
     <link rel="stylesheet" href="/assets/css/z-index.css">
   </head>
 
@@ -27,6 +28,7 @@
     </div>
 
     <div id="viewer" class="viewer" tabindex="2"></div>
+    <div class="minimap" id="minimap"></div>
 
     <div id="toolbar" class="navbar navbar-expand-sm bg-body-tertiary">
       <div class="container-fluid">
@@ -41,10 +43,24 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link border border-1 rounded item-icon disabled" data-name="floor-plan" aria-current="page"
-                href="#">
+              <a id="tool-icon-plans" class="nav-link border border-1 rounded item-icon" data-name="floor-plan"
+                aria-current="page" href="#">
                 <span class="material-symbols-outlined">stacks</span>
                 <span class="tooltiptext">Floor Plan</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a id="tool-icon-minimap" class="nav-link border border-1 rounded item-icon" data-name="floor-plan"
+                aria-current="page" href="#">
+                <span class="material-symbols-outlined">magnification_large</span>
+                <span class="tooltiptext">Mini Map</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a id="tool-icon-visibility" class="nav-link border border-1 rounded item-icon" data-name="visibility"
+                aria-current="page" href="#">
+                <span class="material-symbols-outlined">visibility</span>
+                <span class="tooltiptext">Visibility</span>
               </a>
             </li>
             <li class="nav-item">
@@ -67,7 +83,42 @@
     </div>
 
     <div id="sidepanel" class="sidepanel">
-      <div id="measurement-panel" class="sidepanel-box float-end">
+      <!-- visibility tool -->
+      <div id="visibility-panel" class="sidepanel-box">
+        <div class="card">
+          <div class="card-body p-0 m-0">
+            <div class="accordion accordion-flush" id="accordionVisibility">
+              <!-- list ifc types -->
+              <div class="accordion-item">
+                <h2 class="accordion-header">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#visibility-storeys" aria-expanded="false" aria-controls="visibility-storeys">
+                    Storeys
+                  </button>
+                </h2>
+                <div id="visibility-storeys" class="accordion-collapse collapse" data-bs-parent="#accordionVisibility">
+                  <div id="visibility-storeys-content" class="accordion-body p-0"></div>
+                </div>
+              </div>
+              <!-- list storeys -->
+              <div class="accordion-item">
+                <h2 class="accordion-header">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#visibility-ifc" aria-expanded="false" aria-controls="visibility-ifc">
+                    IFC Category
+                  </button>
+                </h2>
+                <div id="visibility-ifc" class="accordion-collapse collapse" data-bs-parent="#accordionVisibility">
+                  <div id="visibility-ifc-content" class="accordion-body p-0"></div>
+                </div>
+              </div>
+            </div><!-- // end accordian -->
+          </div>
+        </div>
+      </div>
+
+      <!-- measurement tool -->
+      <div id="measurement-panel" class="sidepanel-box">
         <div class="card">
           <div class="card-header text-bg-secondary d-flex align-items-center">
             <div class="d-flex">
@@ -76,9 +127,6 @@
             </div>
           </div>
           <div class="card-body">
-            <div class="m-auto">
-            </div>
-
             <input type="radio" class="btn-check btn-measurement" name="btn-measurement" id="btn-measurement-angle"
               autocomplete="off">
             <label class="btn btn-outline-primary" for="btn-measurement-angle">Angle</label>
