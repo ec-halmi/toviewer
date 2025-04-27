@@ -30,3 +30,21 @@
   color: white;
   text-align: center;
 }
+
+/* MINIMAP */
+#minimap {
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  height: 30%;
+  width: 40%;
+  padding: 15px;
+}
+
+#minimap canvas {
+  height: 100% !important;
+  width: 100% !important;
+  border-radius: 12px;
+  border: 1px #939393 solid;
+  box-shadow: -3px 3px 15px 1px;
+}
