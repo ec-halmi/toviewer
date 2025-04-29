@@ -30,7 +30,7 @@ export class HighlightLoader {
     this.highlightDblClickEvent();
 
     // Loads properties class
-    const propertiesLoader = new PropertiesLoader(this.components, this.world);
+    this.propertiesLoader = new PropertiesLoader(this.components, this.world);
   }
 
   /** implement clicks on element
@@ -42,7 +42,7 @@ export class HighlightLoader {
       event.stopPropagation();
       event.preventDefault();
       const result = await this.highlighter.highlight(this.highlightName, true, false);
-      console.log("Click", result);
+      // console.log("Click", result);
     };
   }
 
@@ -54,7 +54,12 @@ export class HighlightLoader {
       event.stopPropagation();
       event.preventDefault();
       const result = await this.highlighter.highlight(this.highlightName, true, false);
-      console.log("DblClick", result);
+
+      if (result) {
+        console.log("DblClick", result);
+
+        this.propertiesLoader.display(result);
+      }
     };
   }
 
