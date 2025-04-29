@@ -1,3 +1,29 @@
 #element-details-box {
   display: none;
+  z-index: 7;
+}
+
+#element-card * {
+  font-size: 12px;
+}
+
+#element-card {
+  position: relative;
+  width: 300px;
+  max-width: 400px;
+  /* border-top: 3px solid #6b6b6b !important; */
+}
+
+#element-card .card-tools button {
+  padding: 3px;
+
+  border-radius: 3px;
+  border-width: 1px;
+
+  margin-left: 3px;
+}
+
+#element-card .card-header,
+#element-card .card-body {
+  padding: 6px 8px;
 }
