@@ -29,8 +29,23 @@
     </div>
 
     <div id="viewer" class="viewer" tabindex="2">
-      <div id="element-details-box" class="position-absolute top-50 start-50 translate-middle"></div>
     </div>
+
+    <div id="element-details-box" class="position-absolute top-50 start-50 translate-middle">
+      <div id="element-card" class="card shadow">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h5 class="card-title m-0">Element Properties</h5>
+          <div class="card-tools d-flex justify-content-end">
+            <button id="element-details-box-minimise" type="button" class="material-symbols-rounded"
+              data-name="minimise">minimize</button>
+            <button id="element-details-box-close" type="button" class="material-symbols-rounded"
+              data-name="close">close</button>
+          </div>
+        </div>
+        <div id="element-card-body" class="card-body"></div>
+      </div>
+    </div>
+
     <div class="minimap" id="minimap"></div>
 
     <div id="toolbar" class="navbar navbar-expand-sm bg-body-tertiary">
