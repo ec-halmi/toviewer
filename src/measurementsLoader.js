@@ -133,7 +133,7 @@ export class MeasurementsLoader {
 
           case "btn-measurement-volume":
             this.volume.enabled = true;
-            ths.highlighter.events.select.onHighlight.add((event) => {
+            this.highlighter.events.select.onHighlight.add((event) => {
               const volume = this.volume.getVolumeFromFragments(event);
             });
 
