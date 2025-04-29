@@ -1,8 +1,13 @@
+#sidepanel {
+  width: 100%;
+}
+
 .sidepanel {
   position: fixed;
-  width: 300px !important;
+  max-width: 300px !important;
   top: 0;
   right: 0;
+  padding: 10px;
 }
 
 .sidepanel ul {

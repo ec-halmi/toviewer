@@ -36,8 +36,8 @@
   position: absolute;
   bottom: 0px;
   left: 0px;
-  height: 30%;
-  width: 40%;
+  max-height: 30%;
+  max-width: 40%;
   padding: 15px;
 }
 
