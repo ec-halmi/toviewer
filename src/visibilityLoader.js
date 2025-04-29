@@ -3,18 +3,18 @@
 import * as WEBIFC from "web-ifc";
 
 export class VisibilityLoader {
-  constructor(component, world, model) {
-    this.component = component;
+  constructor(components, world, model) {
+    this.components = components;
     this.world = world;
     this.model = model;
 
     // get hider
-    this.hider = this.component.get(this.component.OBC.Hider);
+    this.hider = this.components.get(this.components.OBC.Hider);
     // classifier
-    this.classifier = this.component.get(this.component.OBC.Classifier);
+    this.classifier = this.components.get(this.components.OBC.Classifier);
 
     // get indexer
-    this.indexer = this.component.get(this.component.OBC.IfcRelationsIndexer);
+    this.indexer = this.components.get(this.components.OBC.IfcRelationsIndexer);
     this.indexer.process(this.model);
     const serializedRelations = this.indexer.serializeModelRelations(this.model);
     this.jsonData = JSON.parse(serializedRelations);
@@ -23,7 +23,6 @@ export class VisibilityLoader {
   // enable
   async enable(box, flag = false) {
     const visibilityStoreysList = document.getElementById("visibility-storeys-content");
-    // console.log(this.classifier.list);
 
     if (flag) {
       box.style.display = "block";
@@ -50,7 +49,6 @@ export class VisibilityLoader {
    * @returns classifier.list
    */
   async classifierByStorey() {
-    // const classifier = this.component.get(this.component.OBC.Classifier);
     const classifier = this.classifier;
     // classifify by category
     await classifier.byEntity(this.model);
@@ -91,7 +89,7 @@ export class VisibilityLoader {
 
 
     Object.keys(storeys).forEach(async (key) => {
-      const frags = await this.model.getFragmentMap([spatialStructures[key].map]);
+      // const frags = await this.model.getFragmentMap([spatialStructures[key].map]);
 
       const li = document.createElement("li");
       li.classList.add("list-group-item", "px-4", "py-3", "active");
@@ -112,10 +110,6 @@ export class VisibilityLoader {
     });
 
     return ul;
-
-    // console.log(ul);
-    // const visibilityStoreysList = document.getElementById("visibility-storeys-content");
-    // visibilityStoreysList.appendChild(ul);
   } //~ storeysVisibilityToggle
 
   /** prepares data for category list
