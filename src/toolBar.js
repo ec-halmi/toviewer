@@ -4,8 +4,8 @@ import { MiniMapLoader } from "./minimapLoader";
 import { PlansLoader } from "./plansLoader";
 
 export class ToolBarLoader {
-  constructor(component, world, model, highlight) {
-    this.component = component;
+  constructor(components, world, model, highlight) {
+    this.components = components;
     this.world = world;
     this.model = model
     this.highlight = highlight;
@@ -32,7 +32,7 @@ export class ToolBarLoader {
   btnFloorPlans() {
     const iconBtn = document.getElementById("tool-icon-plans");
 
-    const plansLoader = new PlansLoader(this.component, this.world, this.model);
+    const plansLoader = new PlansLoader(this.components, this.world, this.model);
 
     iconBtn.addEventListener("click", (e) => {
       e.preventDefault();
@@ -55,7 +55,7 @@ export class ToolBarLoader {
   btnMiniMap() {
     const iconBtn = document.getElementById("tool-icon-minimap");
 
-    const miniMapLoader = new MiniMapLoader(this.component, this.world, this.model);
+    const miniMapLoader = new MiniMapLoader(this.components, this.world, this.model);
 
     iconBtn.addEventListener("click", (e) => {
       e.preventDefault();
@@ -83,7 +83,7 @@ export class ToolBarLoader {
     iconBtn.addEventListener("click", async (e) => {
       const btnStatus = this.toggleBtnActiveClass(iconBtn);
 
-      const visibilityLoader = new VisibilityLoader(this.component, this.world, this.model);
+      const visibilityLoader = new VisibilityLoader(this.components, this.world, this.model);
       if (btnStatus) { // true
         await visibilityLoader.enable(box, true);
       } else { // false
@@ -108,7 +108,7 @@ export class ToolBarLoader {
       const btnStatus = this.toggleBtnActiveClass(iconBtn);
 
       // load class
-      let measurementsLoader = new MeasurementsLoader(this.component, this.world, this.highlight);
+      let measurementsLoader = new MeasurementsLoader(this.components, this.world, this.highlight);
 
       if (btnStatus) { // if btn active
         // enable measurement tool box

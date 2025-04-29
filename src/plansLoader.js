@@ -2,16 +2,16 @@
 import * as THREE from "three";
 
 export class PlansLoader {
-  constructor(component, world, model) {
-    this.component = component;
+  constructor(components, world, model) {
+    this.components = components;
     this.world = world;
     this.model = model;
     console.log("lists", model.lists);
 
     // loads FragmentsManager
-    this.fragments = this.component.get(this.component.OBC.FragmentsManager);
+    this.fragments = this.components.get(this.components.OBC.FragmentsManager);
 
-    this.plans = this.component.get(this.component.OBCF.Plans);
+    this.plans = this.components.get(this.components.OBCF.Plans);
 
     // Colors
     this.whiteColor = new THREE.Color("white");
@@ -67,8 +67,8 @@ export class PlansLoader {
    * https://github.com/ThatOpen/engine_components/blob/main/packages/front/src/fragments/Plans/example.ts#L293
    */
   async setupThickness() {
-    const classifier = this.component.get(this.component.OBC.Classifier);
-    const edges = this.component.get(this.component.OBCF.ClipEdges);
+    const classifier = this.components.get(this.components.OBC.Classifier);
+    const edges = this.components.get(this.components.OBCF.ClipEdges);
 
     classifier.byModel(this.model.uuid, this.model);
     classifier.byEntity(this.model);

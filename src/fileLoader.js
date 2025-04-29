@@ -5,23 +5,23 @@ import * as OBC from "@thatopen/components";
 import * as THREE from "three";
 
 export class FileLoader {
-  constructor(component, container) {
-    this.component = component;
+  constructor(components, container) {
+    this.components = components;
 
-    const worlds = component.get(this.component.OBC.Worlds);
+    const worlds = components.get(this.components.OBC.Worlds);
     // this.world = world;
     this.world = worlds.create();
     this.world.container = container; // assign to global
 
-    this.world.scene = new this.component.OBC.SimpleScene(this.component);
-    this.world.renderer = new this.component.OBCF.PostproductionRenderer(this.component, this.world.container);
-    this.world.camera = new this.component.OBC.OrthoPerspectiveCamera(this.component);
+    this.world.scene = new this.components.OBC.SimpleScene(this.components);
+    this.world.renderer = new this.components.OBCF.PostproductionRenderer(this.components, this.world.container);
+    this.world.camera = new this.components.OBC.OrthoPerspectiveCamera(this.components);
 
 
-    this.component.init();
+    this.components.init();
 
     // fragments
-    this.fragmentIfcLoader = this.component.get(OBC.IfcLoader);
+    this.fragmentIfcLoader = this.components.get(OBC.IfcLoader);
 
     this.fragmentIfcLoader.setup();
     this.fragmentIfcLoader.settings.webIfc.COORDINATE_TO_ORIGIN = true;
@@ -43,7 +43,7 @@ export class FileLoader {
 
       this.world.scene.setup();
 
-      const grids = this.component.get(OBC.Grids);
+      const grids = this.components.get(OBC.Grids);
       const grid = grids.create(this.world);
       this.world.renderer.postproduction.customEffects.excludedMeshes.push(grid.three);
 
@@ -87,7 +87,7 @@ export class FileLoader {
   }
 
   classifyByCategory(model, category) {
-    const classifier = this.component.get(OBC.Classifier);
+    const classifier = this.components.get(OBC.Classifier);
     classifier.byEntity(model);
 
     const getItems = classifier.find({ entities: [category] });
