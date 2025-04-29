@@ -1,6 +1,7 @@
 import * as OBC from "@thatopen/components";
 import * as OBCF from "@thatopen/components-front";
 import * as THREE from "three";
+import { PropertiesLoader } from "./propertiesLoader";
 
 
 export class HighlightLoader {
@@ -14,6 +15,8 @@ export class HighlightLoader {
       hoverEnabled: false, // disable selection on hover
     });
     this.highlighter.zoomToSelection = false;
+    this.highlightName = "default";
+    this.highlighter.add(this.highlightName, null);
 
     // add outliner
     this.outliner = null;
@@ -22,15 +25,49 @@ export class HighlightLoader {
     // init handler
     this.hideEventHandler = null;
     this.boundHideHandler = null; // Store bound function for proper removal
+
+    this.highlightClickEvent();
+    this.highlightDblClickEvent();
+
+    // Loads properties class
+    const propertiesLoader = new PropertiesLoader(this.components, this.world);
   }
 
+  /** implement clicks on element
+   * 
+   */
+  async highlightClickEvent() {
+    this.world.container.onclick = async (event) => {
+      // console.log(event); // @debug
+      event.stopPropagation();
+      event.preventDefault();
+      const result = await this.highlighter.highlight(this.highlightName, true, false);
+      console.log("Click", result);
+    };
+  }
+
+  /** implement double clicks on element
+   * 
+   */
+  async highlightDblClickEvent() {
+    this.world.container.ondblclick = async (event) => {
+      event.stopPropagation();
+      event.preventDefault();
+      const result = await this.highlighter.highlight(this.highlightName, true, false);
+      console.log("DblClick", result);
+    };
+  }
+
+  /** implement outliner
+   * 
+   */
   outLineHandler() {
     this.outliner = this.components.get(OBCF.Outliner);
     this.outliner.world = this.world;
     this.outliner.enabled = true;
 
     this.outliner.create(
-      "example",
+      "outliner",
       new THREE.MeshBasicMaterial({
         color: 0xbcf124,
         transparent: true,
@@ -41,9 +78,10 @@ export class HighlightLoader {
     // init content element
     this.barContent = null;
 
-    this.highlighter.events.select.onHighlight.add((data) => {
-      this.outliner.clear("example");
-      this.outliner.add("example", data);
+    // implement highlight onselect
+    this.highlighter.events.select.onHighlight.add(data => {
+      this.outliner.clear("outliner");
+      this.outliner.add("outliner", data);
 
       this.removeHideListener();
 
@@ -51,6 +89,7 @@ export class HighlightLoader {
       this.boundHideHandler = (event) => this.hideHighlightedItem(event, data);
       this.hideEventHandler = this.boundHideHandler;
 
+      // add listener - keydown
       document.addEventListener('keydown', this.hideEventHandler);
 
       // adds status bar message
@@ -66,8 +105,9 @@ export class HighlightLoader {
       }
     });
 
+    // implement highlight onclear
     this.highlighter.events.select.onClear.add(() => {
-      this.outliner.clear("example");
+      this.outliner.clear("outliner");
       // console.log("Highlight clear");
 
       // remove bar content if exist
@@ -80,6 +120,7 @@ export class HighlightLoader {
     });
   }
 
+  // Implement hider
   hideHandler(items, flag, message = null) {
     try {
       const hider = this.components.get(OBC.Hider);
@@ -93,6 +134,11 @@ export class HighlightLoader {
     }
   }
 
+  /** keydown events
+   * 
+   * H+Shift - hide element
+   * Esc - clear selections
+   */
   async hideHighlightedItem(event, data) {
     if (event.key === 'H' && event.shiftKey) {
       this.hideHandler(data, false);
