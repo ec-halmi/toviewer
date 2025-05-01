@@ -1,6 +1,5 @@
 #element-details-box {
   display: none;
-  z-index: 7;
 }
 
 #element-card * {
@@ -26,4 +25,9 @@
 #element-card .card-header,
 #element-card .card-body {
   padding: 6px 8px;
+}
+
+#element-card .card-body {
+  max-height: 70vh;
+  overflow: auto;
 }
