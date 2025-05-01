@@ -279,17 +279,17 @@ export class PropertiesLoader {
     };
 
     const ifcUnitSymbols = {
-      MILLIMETRE: { symbol: "mm", digits: 0 },
+      MILLIMETRE: { symbol: "mm", digits: 2 },
       METRE: { symbol: "m", digits: 2 },
       KILOMETRE: { symbol: "km", digits: 2 },
       SQUARE_METRE: { symbol: "m²", digits: 2 },
       CUBIC_METRE: { symbol: "m³", digits: 2 },
       DEGREE: { symbol: "°", digits: 2 },
       RADIAN: { symbol: "rad", digits: 2 },
-      GRAM: { symbol: "g", digits: 0 },
+      GRAM: { symbol: "g", digits: 2 },
       KILOGRAM: { symbol: "kg", digits: 2 },
-      MILLISECOND: { symbol: "ms", digits: 0 },
-      SECOND: { symbol: "s", digits: 0 },
+      MILLISECOND: { symbol: "ms", digits: 2 },
+      SECOND: { symbol: "s", digits: 2 },
     };
 
     const units = Object.values(
