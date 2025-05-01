@@ -4,6 +4,7 @@ import * as OBCF from "@thatopen/components-front";
 import { FileLoader } from "./fileLoader";
 import { HighlightLoader } from "./highlightLoader";
 import { ToolBarLoader } from "./toolBar";
+import { SpatialLoader } from "./spatialLoader";
 
 // Fetch container
 const container = document.getElementById("viewer");
@@ -35,6 +36,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         highlightloader.hideHandler(spaceItems, false, "Space items"); // hide by fragments
 
         console.log("IFC file loaded successfully.");
+
+        // loads the spatial tree
+        const tree = new SpatialLoader(components, loader.world, loader.model);
 
         return loader;
       } else {
