@@ -56,9 +56,7 @@ export class HighlightLoader {
       const result = await this.highlighter.highlight(this.highlightName, true, false);
 
       if (result) {
-        console.log("DblClick", result);
-
-        this.propertiesLoader.display(result);
+        await this.propertiesLoader.display(result);
       }
     };
   }
