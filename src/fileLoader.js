@@ -2,7 +2,6 @@
 
 import * as WEBIFC from "web-ifc";
 import * as OBC from "@thatopen/components";
-import * as THREE from "three";
 
 export class FileLoader {
   constructor(components, container) {

@@ -72,7 +72,7 @@ export class PropertiesLoader {
     const expressID = this.propertyRow("Express ID", props["expressID"]);
     this.infoBoxBody.append(expressID);
     // object type
-    const objectType = this.propertyRow("Object Type", props["ObjectType"].value);
+    const objectType = this.propertyRow("Object Type", props["ObjectType"].value ?? "Not Available");
     this.infoBoxBody.append(objectType);
     // PredefinedType
     const predefinedType = this.propertyRow("Predefined Type", props["PredefinedType"] ? props["PredefinedType"].value : "Not Available");
