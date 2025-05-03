@@ -31,6 +31,7 @@
     <div id="viewer" class="viewer" tabindex="2">
     </div>
 
+    <!-- property box -->
     <div id="element-details-box" class="position-absolute top-50 start-50 translate-middle">
       <div id="element-card" class="card shadow">
         <div class="card-header d-flex justify-content-between align-items-center">
@@ -46,8 +47,10 @@
       </div>
     </div>
 
+    <!-- minimap -->
     <div class="minimap" id="minimap"></div>
 
+    <!-- toolbar -->
     <div id="toolbar" class="navbar navbar-expand-sm bg-body-tertiary">
       <div class="container-fluid">
         <a class="navbar-brand" href="#">NBeS</a>
@@ -89,6 +92,20 @@
               </a>
             </li>
             <li class="nav-item">
+              <a id="camera-first-person" class="nav-link border border-1 rounded item-icon camera-mode"
+                aria-current="page" href="#" data-name="camera-first-person" role="button">
+                <span class="material-symbols-outlined">simulation</span>
+                <span class="tooltiptext">First Person View</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a id="camera-plan-view" class="nav-link border border-1 rounded item-icon camera-mode"
+                aria-current="page" href="#" data-name="camera-plan-view" role="button">
+                <span class="material-symbols-outlined">drag_pan</span>
+                <span class="tooltiptext">Pan View</span>
+              </a>
+            </li>
+            <li class="nav-item">
               <a id="camera-reset" class="nav-link  border border-1 rounded item-icon" aria-current="page" href="#"
                 data-name="camera-reset">
                 <span class="material-symbols-outlined">cameraswitch</span>
@@ -100,6 +117,7 @@
       </div>
     </div>
 
+    <!-- side panel -->
     <div id="sidepanel" class="sidepanel">
       <!-- visibility tool -->
       <div id="visibility-panel" class="sidepanel-box">
