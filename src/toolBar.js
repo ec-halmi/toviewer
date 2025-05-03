@@ -1,7 +1,8 @@
-import { MeasurementsLoader } from "./measurementsLoader";
-import { VisibilityLoader } from "./visibilityLoader";
-import { MiniMapLoader } from "./minimapLoader";
-import { PlansLoader } from "./plansLoader";
+import { MeasurementsLoader } from "/src/measurementsLoader.js";
+import { VisibilityLoader } from "/src/visibilityLoader.js";
+import { MiniMapLoader } from "/src/minimapLoader.js";
+import { PlansLoader } from "/src/plansLoader.js";
+import { CameraLoader } from "/src/cameraLoader.js";
 
 export class ToolBarLoader {
   constructor(components, world, model, highlight) {
@@ -24,6 +25,65 @@ export class ToolBarLoader {
 
     // floorplans
     this.btnFloorPlans();
+
+    // enable camera loader
+    this.camera = new CameraLoader(this.components, this.world);
+
+    // camera-first-person
+    this.btnCameraFirstPerson();
+
+    // camera-plan-view
+    this.btnCameraPlanView();
+  }
+
+  /** camera-plan-view
+   * 
+   */
+  btnCameraPlanView() {
+    const iconBtn = document.getElementById("camera-plan-view");
+
+    iconBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+
+      document.querySelectorAll(".camera-mode").forEach(item => {
+        if (item.id !== iconBtn.id) {
+          item.classList.remove("active");
+        }
+      });
+
+      const btnStatus = this.toggleBtnActiveClass(iconBtn);
+
+      if (btnStatus) {
+        this.camera.setMode("Plan");
+      } else {
+        this.camera.setMode();
+      }
+    });
+  }
+
+  /** camera-first-person
+   * 
+   */
+  btnCameraFirstPerson() {
+    const iconBtn = document.getElementById("camera-first-person");
+
+    iconBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+
+      document.querySelectorAll(".camera-mode").forEach(item => {
+        if (item.id !== iconBtn.id) {
+          item.classList.remove("active");
+        }
+      });
+
+      const btnStatus = this.toggleBtnActiveClass(iconBtn);
+
+      if (btnStatus) {
+        this.camera.setMode("FirstPerson");
+      } else {
+        this.camera.setMode();
+      }
+    });
   }
 
   /**
