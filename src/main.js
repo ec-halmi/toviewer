@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.log("IFC file loaded successfully.");
 
         // loads the spatial tree
-        const tree = new SpatialLoader(components, loader.world, loader.model);
+        new SpatialLoader(components, loader.world, loader.model, highlightloader);
 
         return loader;
       } else {
