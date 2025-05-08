@@ -6,7 +6,6 @@ export class PlansLoader {
     this.components = components;
     this.world = world;
     this.model = model;
-    console.log("lists", model.lists);
 
     // loads FragmentsManager
     this.fragments = this.components.get(this.components.OBC.FragmentsManager);
@@ -18,22 +17,27 @@ export class PlansLoader {
     // Store the original background color and minGloss value
     this.originalBackgroundColor = this.world.scene.three.background;
     this.originalMinGloss = this.world.renderer.postproduction.customEffects.minGloss;
+
+    this.iconPlanEvent = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      this.setupThickness(true);
+      this.setupColors(true);
+      this.plans.goTo(e.target.id);
+    }
   }
 
-  async enable(expressId = 0) {
+  async enable() {
     this.plans.world = this.world;
     await this.plans.generate(this.model);
 
-    // set up elements thickness
-    this.setupThickness(true);
-    // set up colors
-    this.setupColors(true);
+    // get storey icons
+    document.querySelectorAll(".plan-icon").forEach(element => {
+      element.style.color = "var(--bs-accordion-btn-color)";
 
-    for (const plan of this.plans.list) {
-      // console.log(plan);
-    }
-
-    this.plans.goTo("0j0D7YhXr2YgyLFnxk0DSN");
+      element.addEventListener("click", this.iconPlanEvent);
+    });
   }
 
   disable() {
@@ -42,8 +46,14 @@ export class PlansLoader {
     // set up colors
     this.setupColors(false);
 
+    // this.plans.enabled = false;
     this.plans.exitPlanView();
-    this.plans.enabled = false;
+
+    // get storey icons
+    document.querySelectorAll(".plan-icon").forEach(element => {
+      element.removeEventListener("click", this.iconPlanEvent);
+      element.style.color = "var(--bs-gray-400)";
+    });
   }
 
 
@@ -66,14 +76,14 @@ export class PlansLoader {
    *  
    * https://github.com/ThatOpen/engine_components/blob/main/packages/front/src/fragments/Plans/example.ts#L293
    */
-  async setupThickness() {
+  async setupThickness(flag) {
     const classifier = this.components.get(this.components.OBC.Classifier);
     const edges = this.components.get(this.components.OBCF.ClipEdges);
 
     classifier.byModel(this.model.uuid, this.model);
     classifier.byEntity(this.model);
 
-    const modelItems = classifier.find({ models: [this.model.uuid] });
+    // const modelItems = classifier.find({ models: [this.model.uuid] });
 
     const thickItems = classifier.find({
       entities: ["IFCWALLSTANDARDCASE", "IFCWALL"],
