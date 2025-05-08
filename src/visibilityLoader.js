@@ -92,7 +92,7 @@ export class VisibilityLoader {
       // const frags = await this.model.getFragmentMap([spatialStructures[key].map]);
 
       const li = document.createElement("li");
-      li.classList.add("list-group-item", "px-4", "py-3", "active");
+      li.classList.add("list-group-item", "active");
       li.innerHTML = `${key}`;
 
       li.addEventListener("click", (e) => {
@@ -166,7 +166,7 @@ export class VisibilityLoader {
     // loop items
     for (const item of items) {
       const li = document.createElement("li");
-      li.classList.add("list-group-item", "px-4", "py-3", "active");
+      li.classList.add("list-group-item", "active");
       li.id = item.id;
       li.innerHTML = item.label;
 
@@ -186,7 +186,7 @@ export class VisibilityLoader {
     // manually add ifcspace if needed
     if (filteredItem) {
       const li = document.createElement("li");
-      li.classList.add("list-group-item", "px-4", "py-3");
+      li.classList.add("list-group-item");
       li.id = filteredItem.id;
       li.innerHTML = filteredItem.label;
 
