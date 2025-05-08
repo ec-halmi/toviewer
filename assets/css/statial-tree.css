@@ -1,0 +1,56 @@
+/* overide all font size for browser */
+#statial-tree * {
+  font-size: 11px !important;
+}
+
+#statial-tree {
+  width: 350px;
+  height: 100vh;
+
+  position: relative;
+  /* margin-top: 55px; */
+  padding: 20px;
+  border: 0 !important;
+
+  background: none !important;
+}
+
+#statial-tree .accordion-button {
+  padding: 6px !important;
+}
+
+#statial-tree .accordion-body {
+  /* padding: 6px 12px; */
+  padding: 0;
+}
+
+#statial-tree .card {
+  margin-top: 55px;
+}
+
+#statial-tree .card-header,
+#statial-tree .card-footer {
+  /* background-color: gainsboro; */
+}
+
+.accordion .accordion .accordion-button,
+.accordion .accordion .accordion-body {
+  padding-right: 0 !important;
+}
+
+.ifc-element {
+  padding: 6px !important;
+}
+
+.ifc-element.active {
+  color: var(--bs-body-bg);
+  background-color: var(--bs-primary);
+}
+
+/* icons */
+#statial-tree i {
+  font-size: 18px !important;
+  padding: 6px !important;
+
+  cursor: pointer;
+}
