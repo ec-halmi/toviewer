@@ -37,15 +37,17 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         console.log("IFC file loaded successfully.");
 
-        // loads the spatial tree
-        new SpatialLoader(components, loader.world, loader.model, highlightloader);
-
         return loader;
       } else {
         console.log("Failed to load IFC file.");
       }
     }).then(loader => {
       const toolbarLoader = new ToolBarLoader(components, loader.world, loader.model, highlightloader);
+
+      // loads the spatial tree
+      new SpatialLoader(components, loader.world, loader.model, highlightloader);
+
+      return loader;
     })
     .catch((error) => {
       console.error("An unexpected error occurred:", error);
