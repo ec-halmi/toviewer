@@ -41,7 +41,6 @@ export class SpatialLoader {
     this._fetchProjectInfo();
     // generate tree
     this._fetchModelTree().then(() => {
-
       const toolbar = document.getElementById("toolbar");
       toolbar.addEventListener("click", (e) => {
         this.classifier.resetColor(this.all);
@@ -49,6 +48,22 @@ export class SpatialLoader {
           this.selectedItem.classList.remove("active");
         }
       });
+    }).then(() => {
+      /**
+       * get anchor, if exist, select the item in model and reveal in browser
+       */
+      const anchor = window.location.hash;
+      if (typeof anchor === "string" && anchor.length > 0) {
+        const [str, id] = anchor.split('-');
+        if (!isNaN(id)) {
+          this.openAccordionItem(id);
+
+          this.classifier.setColor(this.all, this.color); // set all colors
+          this.highlighter.highlightItem(id, this.color);
+        } else {
+          console.log("No item was selected.");
+        }
+      }
     });
   }
 
@@ -117,7 +132,6 @@ export class SpatialLoader {
         }
 
         // add building to list
-        // const buildingTitle = this.createRow("Building", building["LongName"].value ?? building["Name"].value);
         const item = this._createAccordianItem(accordian.id, building["LongName"].value ?? building["Name"].value, accordianStorey);
 
         accordian.style.overflow = "auto";
@@ -187,8 +201,6 @@ export class SpatialLoader {
         content.addEventListener("click", e => {
           e.preventDefault;
 
-          this.highlighter.highlighter.clear(); // clear previous selections
-
           if (e.target.classList.contains("active")) {
             e.target.classList.remove("active");
             this.classifier.resetColor(this.all);
@@ -199,8 +211,7 @@ export class SpatialLoader {
 
             // highlights
             this.classifier.setColor(this.all, this.color); // set all colors
-            const fragment = this.model.getFragmentMap([parseInt(e.target.id)]);
-            this.highlighter.highlighter.highlightByID("item-select", fragment, true, true);
+            this.highlighter.highlightItem(e.target.id, this.color);
 
             e.target.classList.toggle("active");
             this.selectedItem = e.target;
@@ -208,7 +219,6 @@ export class SpatialLoader {
         });
       }
     }
-    // body.append(content);
 
     body.append(content);
 
@@ -411,5 +421,32 @@ export class SpatialLoader {
     });
 
     return accordian;
+  }
+
+  /** reveal the target item in the browser and highlight it
+   * 
+   * @param {string} targetId - expressid
+   * @returns 
+   */
+  async openAccordionItem(targetId) {
+    const target = document.getElementById(targetId);
+
+    if (!target) {
+      console.warn(`Element with ID ${targetId} not found.`);
+      return;
+    }
+
+    target.classList.add("active");
+
+    // Traverse up to find all parent collapse elements
+    let element = target;
+    while (element && element !== document.body) {
+      if (element.classList.contains('accordion-collapse')) {
+        // Show this collapse
+        const bsCollapse = new bootstrap.Collapse(element, { toggle: false });
+        bsCollapse.show();
+      }
+      element = element.parentElement;
+    }
   }
 }
