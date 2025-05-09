@@ -166,4 +166,20 @@ export class HighlightLoader {
   destroy() {
     this.removeHideListener();
   }
+
+
+  /**
+   * - clear previous selections
+   * - set color
+   * - get fragment
+   * - highlight
+   * 
+   * @param {string} expressId 
+   */
+  async highlightItem(expressId) {
+    this.highlighter.clear(); // clear previous selections
+
+    const fragment = this.world.model.getFragmentMap([parseInt(expressId)]);
+    await this.highlighter.highlightByID("item-select", fragment, true, true);
+  }
 }
