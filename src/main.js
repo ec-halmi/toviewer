@@ -19,14 +19,14 @@ const fileloader = new FileLoader(components, container); // debug
 // init nulls
 var highlightloader = null;
 
-const ifcFileUrl = "/models/RVT23_NBeS-3.01_aPT-3 STY SEMI D_240914.ifc"; // URL to the Flask API endpoint
+// const ifcFileUrl = "/viewer/models/RVT23_NBeS-3.01_aPT-3 STY SEMI D_240914.ifc"; // URL to the Flask API endpoint
 // const ifcFileUrl = "/models/RVT23_NBeS-4.0_aPT-SCHOOL_250403.ifc"; // URL to the Flask API endpoint
 // const ifcFileUrl = "/models/RVT25_NBeS-3.02_aPT-P8_250114.ifc"; // URL to the Flask API endpoint
 
 document.addEventListener('DOMContentLoaded', async () => {
   console.log("Loading viewer...");
 
-  fileloader.loadIFC(ifcFileUrl)
+  fileloader.loadIFC()
     .then(loader => {
       if (loader) {
         // hide space by default
