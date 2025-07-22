@@ -26,54 +26,59 @@ export class FileLoader {
     this.fragmentIfcLoader.settings.webIfc.COORDINATE_TO_ORIGIN = true;
   }
 
-  async loadIFC(url) {
+  async loadIFC(url = null) {
     try {
-      const response = await fetch(url);
+      let a = document.getElementById("ifc-file");
+      if (a) {
+        url = a.href;
 
-      // Check if the response is OK (status code 200–299)
-      if (!response.ok) {
-        throw new Error(`Failed to fetch IFC file: ${response.status} ${response.statusText}`);
+        const response = await fetch(url);
+
+        // Check if the response is OK (status code 200–299)
+        if (!response.ok) {
+          throw new Error(`Failed to fetch IFC file: ${response.status} ${response.statusText}`);
+        }
+
+        this.world.renderer.postproduction.enabled = true;
+
+        // this.world.camera.controls.setLookAt(20, 6, 18, 0, 0, -10);
+        this.world.camera.controls.setLookAt(20, 0, 10, 20, 0, -10);
+
+        this.world.scene.setup();
+
+        const grids = this.components.get(OBC.Grids);
+        const grid = grids.create(this.world);
+        this.world.renderer.postproduction.customEffects.excludedMeshes.push(grid.three);
+
+        //   Optionally exclude categories that we don't want to convert to fragments like very easily:
+        const excludedCats = [
+          WEBIFC.IFCTENDONANCHOR,
+          WEBIFC.IFCREINFORCINGBAR,
+          WEBIFC.IFCREINFORCINGELEMENT,
+        ];
+
+        for (const cat of excludedCats) {
+          this.fragmentIfcLoader.settings.excludedCategories.add(cat);
+        }
+
+        // await new Promise((resolve) => setTimeout(resolve, 5000)); // @debug: Pause
+
+        const dataBuffer = await response.arrayBuffer();
+        const int8ArrayBuffer = new Uint8Array(dataBuffer);
+        // Load the IFC model
+        const model = await this.fragmentIfcLoader.load(int8ArrayBuffer);
+        // console.log(model);
+        model.name = "nbes";
+        this.world.scene.three.add(model);
+        this.world.meshes.add(model);
+        console.log('Model', model);
+
+        this.world.model = model;
+
+        return { world: this.world, model }; // @test
+
+        // If the response is successful, return true
       }
-
-      this.world.renderer.postproduction.enabled = true;
-
-      // this.world.camera.controls.setLookAt(20, 6, 18, 0, 0, -10);
-      this.world.camera.controls.setLookAt(20, 0, 10, 20, 0, -10);
-
-      this.world.scene.setup();
-
-      const grids = this.components.get(OBC.Grids);
-      const grid = grids.create(this.world);
-      this.world.renderer.postproduction.customEffects.excludedMeshes.push(grid.three);
-
-      //   Optionally exclude categories that we don't want to convert to fragments like very easily:
-      const excludedCats = [
-        WEBIFC.IFCTENDONANCHOR,
-        WEBIFC.IFCREINFORCINGBAR,
-        WEBIFC.IFCREINFORCINGELEMENT,
-      ];
-
-      for (const cat of excludedCats) {
-        this.fragmentIfcLoader.settings.excludedCategories.add(cat);
-      }
-
-      // await new Promise((resolve) => setTimeout(resolve, 5000)); // @debug: Pause
-
-      const dataBuffer = await response.arrayBuffer();
-      const int8ArrayBuffer = new Uint8Array(dataBuffer);
-      // Load the IFC model
-      const model = await this.fragmentIfcLoader.load(int8ArrayBuffer);
-      // console.log(model);
-      model.name = "nbes";
-      this.world.scene.three.add(model);
-      this.world.meshes.add(model);
-      console.log('Model', model);
-
-      this.world.model = model;
-
-      return { world: this.world, model }; // @test
-
-      // If the response is successful, return true
     } catch (error) {
       // Log the error for debugging purposes
       console.error("Error loading IFC file:", error.message);
