@@ -1,5 +1,5 @@
 // propertiesLoader
-import * as WEBIFC from "/node_modules/.vite/deps/web-ifc.js?v=3d511b72";
+import * as WEBIFC from "web-ifc";
 
 export class PropertiesLoader {
   constructor(components, world) {
