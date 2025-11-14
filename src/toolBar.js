@@ -1,4 +1,4 @@
-import { MeasurementsLoader } from "/src/measurementsLoader.js";
+// import { MeasurementsLoader } from "/src/measurementsLoader.js";
 import { VisibilityLoader } from "/src/visibilityLoader.js";
 import { PlansLoader } from "/src/plansLoader.js";
 import { CameraLoader } from "/src/cameraLoader.js";
@@ -13,9 +13,6 @@ export class ToolBarLoader
     this.highlight = highlight;
 
     this.btnResetCamera();
-
-    const measurementPanelName = "measurement-panel";
-    this.btnMeasurementTools( measurementPanelName );
 
     // visibility
     // show/hide elements by storey, ifc category, with reset view button
@@ -121,36 +118,6 @@ export class ToolBarLoader
     iconBtn.addEventListener( "click", async ( e ) =>
     {
       this.world.camera.controls.setLookAt( 20, 0, 10, 20, 0, -10 );
-    } );
-  }
-
-  btnMeasurementTools ( panelName = null )
-  {
-    const iconBtn = document.getElementById( "tool-icon-measurement" );
-
-    iconBtn.addEventListener( "click", async ( e ) =>
-    {
-      const penalItem = document.getElementById( panelName );
-      const btnStatus = this.toggleBtnActiveClass( iconBtn );
-
-      // load class
-      let measurementsLoader = new MeasurementsLoader( this.components, this.world, this.highlight );
-
-      if ( btnStatus )
-      { // if btn active
-        // enable measurement tool box
-        measurementsLoader.enable( panelName );
-        // enable tool box
-        penalItem.style.display = "block";
-      } else
-      {
-        // disable
-        measurementsLoader.enable();
-        // 
-        measurementsLoader = null;
-        // hide tool box
-        penalItem.style.display = "none";
-      }
     } );
   }
 
