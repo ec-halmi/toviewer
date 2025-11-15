@@ -7,7 +7,7 @@
 }
 
 .viewer#viewer {
-  z-index: 5;
+  z-index: 1;
 }
 
 #minimap {
@@ -33,4 +33,16 @@
 
 #statial-tree {
   z-index: 7;
+}
+
+#col-toolbar {
+  z-index: 10;
+}
+
+#col-sidebar {
+  z-index: 4;
+}
+
+#col-viewer {
+  z-index: 3;
 }
