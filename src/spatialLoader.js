@@ -1,6 +1,7 @@
 // spatialLoader
 // import * as WEBIFC from "web-ifc";
 // import { HighlightLoader } from "./highlightLoader";
+import { VisibilityLoader } from "./visibilityLoader";
 // import * as OBCF from "@thatopen/components-front";
 import * as THREE from "three";
 
@@ -115,6 +116,12 @@ export class SpatialLoader
         // fetch storeys
         // create accordian for storeys
         const accordianStorey = this._createAccordian();
+
+        const visibilityLoader = new VisibilityLoader( this.components, this.world, this.model );
+        const lists = await visibilityLoader.classifierByStorey();
+        const spatialStructures = lists.spatialStructures;
+        console.log( spatialStructures );
+
         for ( const s of this.jsonData[ b ][ 0 ] )
         {
           const storey = await this.getProperties( s );
@@ -134,24 +141,34 @@ export class SpatialLoader
           // fetch the button, and add icon
           const icon = document.createElement( "i" );
           icon.id = storey.GlobalId.value;
-          icon.classList.add( "material-symbols-outlined", "py-2", "plan-icon" );
-          icon.style.color = "var(--bs-blue)";
+          icon.classList.add( "material-symbols-outlined", "py-2", "plan-icon", "active" );
           icon.style.fontWeight = "600";
           icon.innerHTML = "visibility";
+          const itemsMap = Object.values( spatialStructures ).find( item => item.name === storey[ "LongName" ].value );
+          icon.addEventListener( "click", ( e ) =>
+          {
+            if ( icon.classList.contains( "active" ) )
+            {
+              icon.classList.remove( "active" );
+
+              visibilityLoader.visibilityToggle( itemsMap.map, false );
+            } else
+            {
+              icon.classList.add( "active" );
+              visibilityLoader.visibilityToggle( itemsMap.map, true );
+            }
+          } );
           const header = item.querySelector( '.accordion-header' );
           header.classList.add( "d-flex", "justify-content-between" );
           header.prepend( icon );
-          icon.addEventListener( "click", ( e ) =>
-          {
-            e.preventDefault();
-          } );
         }
 
         // add building to list
         const item = this._createAccordianItem( accordian.id, building[ "LongName" ].value ?? building[ "Name" ].value, accordianStorey, 'siteName' );
 
         accordian.style.overflow = "auto";
-        accordian.style.maxHeight = "calc(100vh - 250px)";
+        accordian.style.maxHeight = "calc(100vh - 60px)";
+        // accordian.style.maxHeight = "100vh";
         accordian.append( item );
 
         siteDiv.append( accordian );
@@ -210,6 +227,8 @@ export class SpatialLoader
       body.classList.add( "accordion-collapse", "collapse" );
       if ( expressId == 'siteName' )
       {
+        content.id = "site-accordian-body";
+        content.classList.add( "overflow-auto" );
         body.classList.add( "show" );
       }
       body.setAttribute( "data-bs-parent", "#" + parent );
