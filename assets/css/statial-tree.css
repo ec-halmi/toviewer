@@ -51,6 +51,14 @@
 #statial-tree i {
   font-size: 18px !important;
   padding: 6px !important;
-
+  color: var(--bs-gray-400);
   cursor: pointer;
+}
+
+#statial-tree i.active {
+  color: var(--bs-blue);
+}
+
+#site-accordian-body {
+  max-height: calc(100vh - 220px);
 }
