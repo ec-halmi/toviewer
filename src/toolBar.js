@@ -18,14 +18,45 @@ export class ToolBarLoader
     // show/hide elements by storey, ifc category, with reset view button
     this.btnVisibility();
 
-    // floorplans
-    this.btnFloorPlans();
-
     // enable camera loader
     this.camera = new CameraLoader( this.components, this.world );
 
+    this.btnCameraFirstPerson();
+
     // camera-plan-view
     this.btnCameraPlanView();
+  }
+
+
+  /** camera-first-person
+   * 
+   */
+  btnCameraFirstPerson ()
+  {
+    const iconBtn = document.getElementById( "camera-first-person" );
+
+    iconBtn.addEventListener( "click", ( e ) =>
+    {
+      e.preventDefault();
+
+      document.querySelectorAll( ".camera-mode" ).forEach( item =>
+      {
+        if ( item.id !== iconBtn.id )
+        {
+          item.classList.remove( "active" );
+        }
+      } );
+
+      const btnStatus = this.toggleBtnActiveClass( iconBtn );
+
+      if ( btnStatus )
+      {
+        this.camera.setMode( "FirstPerson" );
+      } else
+      {
+        this.camera.setMode();
+      }
+    } );
   }
 
   /** camera-plan-view
@@ -55,31 +86,6 @@ export class ToolBarLoader
       } else
       {
         this.camera.setMode();
-      }
-    } );
-  }
-
-  /**
-   * 
-  */
-  btnFloorPlans ()
-  {
-    const iconBtn = document.getElementById( "tool-icon-plans" );
-
-    const plansLoader = new PlansLoader( this.components, this.world, this.model );
-
-    iconBtn.addEventListener( "click", ( e ) =>
-    {
-      e.preventDefault();
-
-      const btnStatus = this.toggleBtnActiveClass( iconBtn );
-
-      if ( btnStatus )
-      {
-        plansLoader.enable();
-      } else
-      {
-        plansLoader.disable();
       }
     } );
   }
