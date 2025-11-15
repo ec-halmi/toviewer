@@ -3,7 +3,21 @@ body {
   font-size: 12px;
 }
 
+body {
+  min-width: 1320px;
+  /* Prevent layout from shrinking below 1920px */
+}
+
 .toast {
   position: relative;
   /* display: block; */
+}
+
+.main-container {
+  min-width: 1320px;
+  height: 100vh;
+}
+
+#row-content {
+  margin-top: 54px;
 }
