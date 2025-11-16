@@ -2,6 +2,8 @@
 // import * as WEBIFC from "web-ifc";
 // import { HighlightLoader } from "./highlightLoader";
 import { VisibilityLoader } from "./visibilityLoader";
+import { PropertiesLoader } from "./propertiesLoader";
+
 // import * as OBCF from "@thatopen/components-front";
 import * as THREE from "three";
 
@@ -61,6 +63,8 @@ export class SpatialLoader
 
       window.addEventListener( "hashchange", () => this.expressIdUrlHandler.call( this ) );
     } );
+
+    this.propertiesLoader = new PropertiesLoader( this.components, this.world );
   }
 
   /** generate the model browser
@@ -518,6 +522,8 @@ export class SpatialLoader
       }
       element = element.parentElement;
     }
+
+    await this.propertiesLoader.display( { id: targetId } );
   }
 
   generateUUID ()
