@@ -120,7 +120,6 @@ export class SpatialLoader
         const visibilityLoader = new VisibilityLoader( this.components, this.world, this.model );
         const lists = await visibilityLoader.classifierByStorey();
         const spatialStructures = lists.spatialStructures;
-        console.log( spatialStructures );
 
         for ( const s of this.jsonData[ b ][ 0 ] )
         {
