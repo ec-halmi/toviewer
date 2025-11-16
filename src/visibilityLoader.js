@@ -2,43 +2,43 @@
 
 import * as WEBIFC from "web-ifc";
 
-export class VisibilityLoader {
-  constructor(components, world, model) {
+export class VisibilityLoader
+{
+  constructor( components, world, model )
+  {
     this.components = components;
     this.world = world;
     this.model = model;
 
     // get hider
-    this.hider = this.components.get(this.components.OBC.Hider);
+    this.hider = this.components.get( this.components.OBC.Hider );
     // classifier
-    this.classifier = this.components.get(this.components.OBC.Classifier);
+    this.classifier = this.components.get( this.components.OBC.Classifier );
 
     // get indexer
-    this.indexer = this.components.get(this.components.OBC.IfcRelationsIndexer);
-    this.indexer.process(this.model);
-    const serializedRelations = this.indexer.serializeModelRelations(this.model);
-    this.jsonData = JSON.parse(serializedRelations);
+    this.indexer = this.components.get( this.components.OBC.IfcRelationsIndexer );
+    this.indexer.process( this.model );
+    const serializedRelations = this.indexer.serializeModelRelations( this.model );
+    this.jsonData = JSON.parse( serializedRelations );
   }
 
   // enable
-  async enable(box, flag = false) {
-    const visibilityStoreysList = document.getElementById("visibility-storeys-content");
-
-    if (flag) {
+  async enable ( box, flag = false )
+  {
+    if ( flag )
+    {
       box.style.display = "block";
 
-      // storeys
-      const list = await this.storeysVisibilityToggle();
-      visibilityStoreysList.appendChild(list);
       // categorys
       this.categoryVisibilityToggle();
-    } else {
+    } else
+    {
       box.style.display = "none";
-      visibilityStoreysList.innerHTML = "";
+
       // unhide all elements
-      this.visibilityToggle(false, true);
+      this.visibilityToggle( false, true );
       // hide ifscpace
-      this.visibilityToggle(this.classifier.list.entities["IFCSPACE"].map, false);
+      this.visibilityToggle( this.classifier.list.entities[ "IFCSPACE" ].map, false );
     }
   }
 
@@ -48,14 +48,15 @@ export class VisibilityLoader {
    * 
    * @returns classifier.list
    */
-  async classifierByStorey() {
+  async classifierByStorey ()
+  {
     const classifier = this.classifier;
     // classifify by category
-    await classifier.byEntity(this.model);
+    await classifier.byEntity( this.model );
     // classify by storeys
-    await classifier.byIfcRel(this.model, WEBIFC.IFCRELCONTAINEDINSPATIALSTRUCTURE, "storeys");
+    await classifier.byIfcRel( this.model, WEBIFC.IFCRELCONTAINEDINSPATIALSTRUCTURE, "storeys" );
     // classify by spatial structures
-    await classifier.bySpatialStructure(this.model);
+    await classifier.bySpatialStructure( this.model );
 
     return classifier.list;
   }
@@ -65,11 +66,14 @@ export class VisibilityLoader {
    * true = show (default)
    * false = hide
    */
-  visibilityToggle(fragments = false, hide = false) {
-    if (fragments) {
-      this.hider.set(hide, fragments); // false means hide the elements
-    } else {
-      this.hider.set(hide); // false means hide the elements
+  visibilityToggle ( fragments = false, hide = false )
+  {
+    if ( fragments )
+    {
+      this.hider.set( hide, fragments ); // false means hide the elements
+    } else
+    {
+      this.hider.set( hide ); // false means hide the elements
     }
   }
 
@@ -77,10 +81,11 @@ export class VisibilityLoader {
    * 
    * @param {object} data 
    */
-  async storeysVisibilityToggle() {
+  async storeysVisibilityToggle ()
+  {
 
-    const ul = document.createElement("ul");
-    ul.classList.add("list-group", "list-group-flush");
+    const ul = document.createElement( "ul" );
+    ul.classList.add( "list-group", "list-group-flush" );
 
     const lists = await this.classifierByStorey();
 
@@ -88,26 +93,30 @@ export class VisibilityLoader {
     const spatialStructures = lists.spatialStructures;
 
 
-    Object.keys(storeys).forEach(async (key) => {
+    Object.keys( storeys ).forEach( async ( key ) =>
+    {
       // const frags = await this.model.getFragmentMap([spatialStructures[key].map]);
 
-      const li = document.createElement("li");
-      li.classList.add("list-group-item", "active");
-      li.innerHTML = `${key}`;
+      const li = document.createElement( "li" );
+      li.classList.add( "list-group-item", "active" );
+      li.innerHTML = `${ key }`;
 
-      li.addEventListener("click", (e) => {
-        if (li.classList.contains("active")) {
-          li.classList.remove("active");
+      li.addEventListener( "click", ( e ) =>
+      {
+        if ( li.classList.contains( "active" ) )
+        {
+          li.classList.remove( "active" );
 
-          this.visibilityToggle(spatialStructures[key].map, false);
-        } else {
-          li.classList.add("active");
-          this.visibilityToggle(spatialStructures[key].map, true);
+          this.visibilityToggle( spatialStructures[ key ].map, false );
+        } else
+        {
+          li.classList.add( "active" );
+          this.visibilityToggle( spatialStructures[ key ].map, true );
         }
-      });
+      } );
 
-      ul.appendChild(li);
-    });
+      ul.appendChild( li );
+    } );
 
     return ul;
   } //~ storeysVisibilityToggle
@@ -115,15 +124,17 @@ export class VisibilityLoader {
   /** prepares data for category list
    * 
    */
-  async categoryVisibilityToggle() {
+  async categoryVisibilityToggle ()
+  {
     const classifier = this.classifier;
-    classifier.byEntity(this.model);
-    const entityCategories = Object.keys(classifier.list.entities);
+    classifier.byEntity( this.model );
+    const entityCategories = Object.keys( classifier.list.entities );
 
     const items = [];
 
-    for (const i of entityCategories) {
-      const found = classifier.find({ entities: [i] });
+    for ( const i of entityCategories )
+    {
+      const found = classifier.find( { entities: [ i ] } );
       items.push(
         {
           id: i,
@@ -133,74 +144,85 @@ export class VisibilityLoader {
       );
     }
 
-    const sortedCaseInsensitive = [...items].sort((a, b) =>
-      a.id.toLowerCase().localeCompare(b.id.toLowerCase())
+    const sortedCaseInsensitive = [ ...items ].sort( ( a, b ) =>
+      a.id.toLowerCase().localeCompare( b.id.toLowerCase() )
     );
 
-    const ul = this.categoryToggleList(sortedCaseInsensitive);
-    const div = document.getElementById("visibility-ifc-content");
+    const ul = this.categoryToggleList( sortedCaseInsensitive );
+    const div = document.getElementById( "visibility-ifc-content" );
     div.innerHTML = "";
-    div.appendChild(ul);
+    div.appendChild( ul );
   } //~ categoryVisibilityToggle
 
   /** generates the ul for category list
    * 
    * @returns ul of elements
    */
-  categoryToggleList(items, id = false) {
+  categoryToggleList ( items, id = false )
+  {
     // create list
-    const ul = document.createElement("ul");
-    ul.classList.add("list-group", "list-group-flush"); // defaults classes
-    if (id) {
+    const ul = document.createElement( "ul" );
+    ul.classList.add( "list-group", "list-group-flush" ); // defaults classes
+    if ( id )
+    {
       ul.id = id;
     }
 
     var filteredItem = null;
     // remove ifcspace if exist in items
-    const indexToRemove = items.findIndex(item => item.id.toLowerCase() === "ifcspace");
-    if (indexToRemove !== -1) {
-      filteredItem = items[indexToRemove];
-      items.splice(indexToRemove, 1); // Removes 1 element at the found index
+    const indexToRemove = items.findIndex( item => item.id.toLowerCase() === "ifcspace" );
+    if ( indexToRemove !== -1 )
+    {
+      filteredItem = items[ indexToRemove ];
+      items.splice( indexToRemove, 1 ); // Removes 1 element at the found index
     }
 
     // loop items
-    for (const item of items) {
-      const li = document.createElement("li");
-      li.classList.add("list-group-item", "active");
+    for ( const item of items )
+    {
+      const li = document.createElement( "li" );
+      li.classList.add( "list-group-item", "active" );
       li.id = item.id;
       li.innerHTML = item.label;
 
-      li.addEventListener("click", (e) => {
-        if (li.classList.contains("active")) {
-          li.classList.remove("active");
-          this.visibilityToggle(item.frags, false);
-        } else {
-          li.classList.add("active");
-          this.visibilityToggle(item.frags, true);
+      li.addEventListener( "click", ( e ) =>
+      {
+        if ( li.classList.contains( "active" ) )
+        {
+          li.classList.remove( "active" );
+          this.visibilityToggle( item.frags, false );
+        } else
+        {
+          li.classList.add( "active" );
+          this.visibilityToggle( item.frags, true );
         }
-      });
+      } );
 
-      ul.appendChild(li);
+      ul.appendChild( li );
     }
 
     // manually add ifcspace if needed
-    if (filteredItem) {
-      const li = document.createElement("li");
-      li.classList.add("list-group-item");
+    if ( filteredItem )
+    {
+      const li = document.createElement( "li" );
+      li.classList.add( "list-group-item" );
       li.id = filteredItem.id;
       li.innerHTML = filteredItem.label;
 
-      li.addEventListener("click", (e) => {
-        if (li.classList.contains("active")) {
-          li.classList.remove("active");
-          this.visibilityToggle(filteredItem.frags, false);
-        } else {
-          li.classList.add("active");
-          this.visibilityToggle(filteredItem.frags, true);
+      li.addEventListener( "click", ( e ) =>
+      {
+        if ( li.classList.contains( "active" ) )
+        {
+          li.classList.remove( "active" );
+          this.visibilityToggle( filteredItem.frags, false );
+        } else
+        {
+          li.classList.add( "active" );
+          this.visibilityToggle( filteredItem.frags, true );
         }
-      });
+      } );
 
-      ul.appendChild(li);
+      ul.appendChild( li );
     }
 
     return ul;
