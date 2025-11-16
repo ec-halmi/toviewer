@@ -517,8 +517,10 @@ export class SpatialLoader
       if ( element.classList.contains( 'accordion-collapse' ) )
       {
         // Show this collapse
-        const bsCollapse = new bootstrap.Collapse( element, { toggle: false } );
-        bsCollapse.show();
+        // const bsCollapse = new bootstrap.Collapse( element, { toggle: false } );
+        // bsCollapse.show();
+
+        element.classList.add( 'show' );
       }
       element = element.parentElement;
     }
