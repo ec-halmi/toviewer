@@ -10,7 +10,9 @@ export default defineConfig( {
   optimizeDeps: { // <-- Moved to top level
     include: [ '@thatopen/components', 'three', 'web-ifc' ],
   },
-
+  esbuild: {
+    drop: [ 'console', 'debugger' ], // removes console.* and debugger
+  },
   build: { // This section is ONLY used when running 'npm run build'
     minify: false,
     // sourcemap: true, 
