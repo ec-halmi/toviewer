@@ -57,24 +57,9 @@ export class SpatialLoader
       } );
     } ).then( () =>
     {
-      /**
-       * get anchor, if exist, select the item in model and reveal in browser
-       */
-      const anchor = window.location.hash;
-      if ( typeof anchor === "string" && anchor.length > 0 )
-      {
-        const [ str, id ] = anchor.split( '-' );
-        if ( !isNaN( id ) )
-        {
-          this.openAccordionItem( id );
+      this.expressIdUrlHandler.call( this );
 
-          this.classifier.setColor( this.all, this.color ); // set all colors
-          this.highlighter.highlightItem( id, this.color );
-        } else
-        {
-          console.log( "No item was selected." );
-        }
-      }
+      window.addEventListener( "hashchange", () => this.expressIdUrlHandler.call( this ) );
     } );
   }
 
@@ -516,6 +501,11 @@ export class SpatialLoader
 
     target.classList.add( "active" );
 
+    // set all colors
+    this.classifier.setColor( this.all, this.color );
+    // set item color
+    this.highlighter.highlightItem( targetId, this.color );
+
     // Traverse up to find all parent collapse elements
     let element = target;
     while ( element && element !== document.body )
@@ -538,5 +528,25 @@ export class SpatialLoader
       const v = c === 'x' ? r : ( r & 0x3 ) | 0x8;
       return v.toString( 16 );
     } );
+  }
+
+  /**
+ * get anchor, if exist, select the item in model and reveal in browser
+ */
+  expressIdUrlHandler ()
+  {
+    const anchor = window.location.hash;
+
+    if ( typeof anchor === "string" && anchor.length > 0 )
+    {
+      const [ str, id ] = anchor.split( '-' );
+      if ( !isNaN( id ) )
+      {
+        this.openAccordionItem( id );
+      } else
+      {
+        console.log( "No item was selected." );
+      }
+    }
   }
 }
