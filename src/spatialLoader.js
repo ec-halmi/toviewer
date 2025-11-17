@@ -4,7 +4,6 @@
 import { VisibilityLoader } from "./visibilityLoader";
 import { PropertiesLoader } from "./propertiesLoader";
 
-// import * as OBCF from "@thatopen/components-front";
 import * as THREE from "three";
 
 export class SpatialLoader
@@ -48,17 +47,25 @@ export class SpatialLoader
     // generate tree
     this._fetchModelTree().then( () =>
     {
-      const toolbar = document.getElementById( "toolbar" );
+      /** toolbar click
+       * 
+       * - reset color and tree selection
+       * - hide spaces
+       */
+      /* const toolbar = document.getElementById( "toolbar" );
       toolbar.addEventListener( "click", ( e ) =>
       {
-        this.classifier.resetColor( this.all );
         if ( this.selectedItem !== null )
         {
           this.selectedItem.classList.remove( "active" );
         }
-      } );
+      } ); */
     } ).then( () =>
     {
+      /** hash handler
+       * 
+       * feature to check on hash, on load or when changed
+       */
       this.expressIdUrlHandler.call( this );
 
       window.addEventListener( "hashchange", () => this.expressIdUrlHandler.call( this ) );
@@ -258,7 +265,7 @@ export class SpatialLoader
               element.classList.remove( "active" );
             } );
 
-            // highlights
+            // gray all elements
             this.classifier.setColor( this.all, this.color ); // set all colors
             this.highlighter.highlightItem( e.target.id, this.color );
 
@@ -530,15 +537,19 @@ export class SpatialLoader
       if ( element.classList.contains( 'accordion-collapse' ) )
       {
         // Show this collapse
-        // const bsCollapse = new bootstrap.Collapse( element, { toggle: false } );
-        // bsCollapse.show();
-
         element.classList.add( 'show' );
       }
       element = element.parentElement;
     }
 
-    await this.propertiesLoader.display( { id: targetId } );
+    /** 
+     * 2025-11-17 17:52:40
+     * - show item if type is space @todo
+     */
+    let fragment = this.world.model.getFragmentMap( [ parseInt( targetId ) ] );
+    this.highlighter.hideHandler( fragment, true );
+    fragment = null;
+    await this.propertiesLoader.display( { id: parseInt( targetId ) } );
   }
 
   generateUUID ()
