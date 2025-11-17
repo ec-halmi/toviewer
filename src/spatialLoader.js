@@ -82,12 +82,10 @@ export class SpatialLoader
 
     // get project
     const project = this.jsonData[ Object.keys( this.jsonData )[ 0 ] ];
-
     // get sites
     const sites = project[ 0 ]; // site ids
     for ( const site of sites )
     {
-
       const siteInfo = await this.getProperties( site );
 
       // site title
@@ -102,7 +100,9 @@ export class SpatialLoader
       {
         const building = await this.getProperties( b );
 
-        // fetch storeys
+        /** CONSTRUCT STOREYS
+         * 
+         */
         // create accordian for storeys
         const accordianStorey = this._createAccordian();
 
@@ -118,9 +118,23 @@ export class SpatialLoader
           // 7 properties
           // 9 type
           // 12 parent/storey
+          // 13 sub elements
+
+          /** get elements
+           * 
+           * spaces are in array 0, other elements in 13
+           * need to combine them together
+           * sometimes storeys dont have space
+           * therefore need to check before adding
+           */
+          let ids = this.jsonData[ s ][ 13 ];
+          if ( this.jsonData[ s ][ 0 ] !== undefined )
+          {
+            ids.push( ...this.jsonData[ s ][ 0 ] );
+          }
 
           // generate elements list here
-          const children = await this._fetchStoreyElements( this.jsonData[ s ][ 13 ] );
+          const children = await this._fetchStoreyElements( ids );
           const storeyList = await this._generateStoreyAccordian( children );
 
           const item = this._createAccordianItem( accordianStorey.id, storey[ "LongName" ].value ?? storey[ "Name" ].value, storeyList );
@@ -448,7 +462,6 @@ export class SpatialLoader
     {
       if ( elems.length > 0 )
       {
-
         const elemsAccordian = this._createAccordian();
 
         // element accordian
