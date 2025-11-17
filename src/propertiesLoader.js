@@ -53,6 +53,11 @@ export class PropertiesLoader
     };
   }
 
+  /**
+   * 
+   * @param {*} data 
+   *  id must be int
+   */
   async display ( data )
   {
     this.infoBoxElem.style.display = "block";
