@@ -84,7 +84,6 @@ export class FileLoader
         model.name = "nbes";
         this.world.scene.three.add( model );
         this.world.meshes.add( model );
-        console.log( 'Model', model );
 
         this.world.model = model;
 
