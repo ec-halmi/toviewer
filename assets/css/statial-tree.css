@@ -39,7 +39,7 @@
 }
 
 .ifc-element {
-  padding: 6px !important;
+  /* padding: 6px !important; */
 }
 
 .ifc-element.active {
@@ -50,7 +50,7 @@
 /* icons */
 #statial-tree i {
   font-size: 18px !important;
-  padding: 6px !important;
+  padding: 6px;
   color: var(--bs-gray-400);
   cursor: pointer;
 }
