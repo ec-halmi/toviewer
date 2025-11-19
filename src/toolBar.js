@@ -1,6 +1,6 @@
 // import { MeasurementsLoader } from "/src/measurementsLoader.js";
 import { VisibilityLoader } from "/src/visibilityLoader.js";
-import { PlansLoader } from "/src/plansLoader.js";
+// import { PlansLoader } from "/src/plansLoader.js";
 import { CameraLoader } from "/src/cameraLoader.js";
 
 export class ToolBarLoader
@@ -10,8 +10,12 @@ export class ToolBarLoader
     this.components = components;
     this.world = world;
     this.model = model
-    this.highlight = highlight;
+    this.highlighter = highlight;
 
+    // viewer reset
+    this.btnResetViewer();
+
+    // camera reset
     this.btnResetCamera();
 
     // visibility
@@ -27,6 +31,38 @@ export class ToolBarLoader
     this.btnCameraPlanView();
   }
 
+  /** viewer-reset
+   * 
+   * reset viewer to default sttings
+   */
+  btnResetViewer ()
+  {
+    const iconBtn = document.getElementById( "viewer-reset" );
+
+    iconBtn.addEventListener( "click", ( e ) =>
+    {
+      // unhide all elements
+      this.highlighter.hideHandler( null, true ); // unhide all items
+
+      // hide all spaces
+      this.classifier = this.components.get( this.components.OBC.Classifier );
+      const spaces = this.classifier.find( { entities: [ 'IFCSPACE' ] } );
+      this.highlighter.hideHandler( spaces, false, "Space items" ); // hide by fragments
+
+      // reset colors
+      this.all = this.classifier.find( {
+        models: [ this.model.uuid ],
+      } );
+      this.classifier.resetColor( this.all );
+
+      // unselect item
+      document.querySelectorAll( ".ifc-element" ).forEach( element =>
+      {
+        element.classList.remove( "active" );
+      } );
+
+    } );
+  }
 
   /** camera-first-person
    * 
