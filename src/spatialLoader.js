@@ -246,33 +246,65 @@ export class SpatialLoader
       content.innerHTML = title;
       if ( expressId !== null )
       {
-        content.id = expressId;
-        content.classList.add( "ifc-element", "user-select-none" );
-        content.setAttribute( "data-expressId", expressId );
+        body.id = expressId;
+        body.classList.add( "ifc-element", "user-select-none" );
+        body.setAttribute( "data-expressId", expressId );
 
-        content.addEventListener( "click", e =>
+        // add info icon
+        body.classList.add( "d-flex", "align-items-center" ); // make icons to the left
+        const infoBtn = document.createElement( "i" );
+        infoBtn.classList.add( "material-symbols-outlined" );
+        infoBtn.classList.add( "px-1" );
+        infoBtn.innerHTML = "info";
+
+        /** row listener
+         * make row active
+         * highlight and select element
+         * gray out other elements
+         */
+        body.addEventListener( "click", async e =>
         {
           e.preventDefault;
+          // hide all ifcspace, just in case
+          this.highlighter.hideHandler( this.classifier.list.entities[ "IFCSPACE" ].map, false ); // hide IfcSpace
 
-          if ( e.target.classList.contains( "active" ) )
+          if ( body.classList.contains( "active" ) )
           {
-            e.target.classList.remove( "active" );
+            // close infobox
+            await this.propertiesLoader.display( {}, false );
+            this.propertiesLoader.btnListeners();
+            // remove all selections
+            body.classList.remove( "active" );
+            // reset all colors
             this.classifier.resetColor( this.all );
           } else
           {
-            document.querySelectorAll( ".ifc-element" ).forEach( element =>
-            {
-              element.classList.remove( "active" );
-            } );
+            // remove from all elements
+            document.querySelectorAll( ".ifc-element" ).forEach( e => e.classList.remove( "active" ) );
 
             // gray all elements
             this.classifier.setColor( this.all, this.color ); // set all colors
-            this.highlighter.highlightItem( e.target.id, this.color );
+            this.highlighter.highlightItem( expressId, this.color );
 
-            e.target.classList.toggle( "active" );
-            this.selectedItem = e.target;
+            body.classList.toggle( "active" );
+            this.selectedItem = body;
+
+            // display selected elem, just in case
+            let fragment = this.world.model.getFragmentMap( [ parseInt( expressId ) ] );
+            this.highlighter.hideHandler( fragment, true );
           }
         } );
+
+        /** icon listener
+         * show infobox
+         */
+        infoBtn.addEventListener( "click", async e =>
+        {
+          // fragment = null;
+
+          await this.propertiesLoader.display( { id: parseInt( expressId ) } );
+        } );
+        body.prepend( infoBtn );
       }
     }
 
@@ -548,7 +580,6 @@ export class SpatialLoader
      */
     let fragment = this.world.model.getFragmentMap( [ parseInt( targetId ) ] );
     this.highlighter.hideHandler( fragment, true );
-    fragment = null;
     await this.propertiesLoader.display( { id: parseInt( targetId ) } );
   }
 
