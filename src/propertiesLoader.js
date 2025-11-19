@@ -16,7 +16,7 @@ export class PropertiesLoader
     const infoBodyId = "element-card-body";
     this.infoBoxBody = document.getElementById( infoBodyId );
     // info card
-    this.infoCard = document.getElementById( "element-card" );
+    this.infoCard = document.getElementById( "element-details-box" );
 
     this.btnListeners();
     this.enableDragDiv();
@@ -58,8 +58,17 @@ export class PropertiesLoader
    * @param {*} data 
    *  id must be int
    */
-  async display ( data )
+  async display ( data, show = true )
   {
+    if ( show === false )
+    {
+      this.infoBoxElem.style.display = "none";
+      return;
+    }
+
+    // set box to middle
+    this.infoCard.classList.add( "top-50" );
+
     this.infoBoxElem.style.display = "block";
     this.infoBoxBody.innerHTML = ""; // reset contents
 
@@ -79,8 +88,14 @@ export class PropertiesLoader
 
     // element type
     const ifcName = this.components.OBC.IfcCategoryMap[ props.type ];
-    const ifcClass = this.propertyRow( "Class", ifcName );
+    const ifcClass = this.propertyRow( "IFC Class", ifcName );
     this.infoBoxBody.append( ifcClass );
+    // show element if space
+    /* if ( props.type === WEBIFC.IFCSPACE )
+    {
+      console.log( WEBIFC.IFCSPACE );
+    } */
+
     // expressID
     const expressID = this.propertyRow( "Express ID", props[ "expressID" ] );
     this.infoBoxBody.append( expressID );
@@ -276,7 +291,7 @@ export class PropertiesLoader
   enableDragDiv ()
   {
     const card = this.infoCard;
-    const dragHandle = document.getElementById( "element-card" );
+    const dragHandle = document.getElementById( "element-details-box" );
 
     let offsetX = 0, offsetY = 0;
     let isDragging = false;
@@ -295,6 +310,7 @@ export class PropertiesLoader
     {
       if ( isDragging )
       {
+        card.classList.remove( "top-50" );
         card.style.left = `${ e.clientX - offsetX }px`;
         card.style.top = `${ e.clientY - offsetY }px`;
       }
