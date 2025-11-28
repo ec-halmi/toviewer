@@ -300,7 +300,8 @@ export class SpatialLoader
          */
         infoBtn.addEventListener( "click", async e =>
         {
-          // fragment = null;
+          e.stopPropagation(); // prevent bubbling to parent
+          e.preventDefault;
 
           await this.propertiesLoader.display( { id: parseInt( expressId ) } );
         } );
