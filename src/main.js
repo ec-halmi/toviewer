@@ -2,9 +2,9 @@ import * as OBC from "@thatopen/components";
 import * as OBCF from "@thatopen/components-front";
 
 import { FileLoader } from "./fileLoader";
-import { HighlightLoader } from "./highlightLoader";
 import { ToolBarLoader } from "./toolBar";
 import { SpatialLoader } from "./spatialLoader";
+import { HighlightLoader } from "./highlightLoader";
 
 // Fetch container
 const container = document.getElementById( "viewer" );
@@ -19,10 +19,6 @@ const fileloader = new FileLoader( components, container ); // debug
 // init nulls
 var highlightloader = null;
 
-// const ifcFileUrl = "/viewer/models/RVT23_NBeS-3.01_aPT-3 STY SEMI D_240914.ifc"; // URL to the Flask API endpoint
-// const ifcFileUrl = "/models/RVT23_NBeS-4.0_aPT-SCHOOL_250403.ifc"; // URL to the Flask API endpoint
-// const ifcFileUrl = "/models/RVT25_NBeS-3.02_aPT-P8_250114.ifc"; // URL to the Flask API endpoint
-
 document.addEventListener( 'DOMContentLoaded', async () =>
 {
   console.log( "Loading viewer..." );
@@ -32,12 +28,6 @@ document.addEventListener( 'DOMContentLoaded', async () =>
     {
       if ( loader )
       {
-        // hide space by default
-        const spaceItems = fileloader.classifyByCategory( loader.model, "IFCSPACE" );
-
-        highlightloader = new HighlightLoader( components, loader.world ); // get highligther
-        highlightloader.hideHandler( spaceItems, false, "Space items" ); // hide by fragments
-
         console.log( "IFC file loaded successfully." );
 
         return loader;
@@ -47,10 +37,19 @@ document.addEventListener( 'DOMContentLoaded', async () =>
       }
     } ).then( loader =>
     {
-      const toolbarLoader = new ToolBarLoader( components, loader.world, loader.model, highlightloader );
+      let indexer = components.get( components.OBC.IfcRelationsIndexer );
+      indexer.process( loader.model );
+
+      highlightloader = new HighlightLoader( components, loader.world, indexer ); // get highligther
+      // hide space by default
+      const spaceItems = fileloader.classifyByCategory( loader.model, "IFCSPACE" );
+      highlightloader.hideHandler( spaceItems, false, "Space items" ); // hide by fragments
+
+      // loads tool bar
+      new ToolBarLoader( components, loader.world, loader.model, highlightloader );
 
       // loads the spatial tree
-      new SpatialLoader( components, loader.world, loader.model, highlightloader );
+      new SpatialLoader( components, loader.world, loader.model, highlightloader, indexer );
 
       return loader;
     } )
