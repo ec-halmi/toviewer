@@ -3,7 +3,7 @@ import * as WEBIFC from "web-ifc";
 
 export class PropertiesLoader
 {
-  constructor( components, world )
+  constructor( components, world, indexer )
   {
     this.components = components;
     this.world = world;
@@ -22,11 +22,12 @@ export class PropertiesLoader
     this.enableDragDiv();
 
     // indexer
-    this.indexer = this.components.get( this.components.OBC.IfcRelationsIndexer );
-    this.indexer.process( this.model );
-    this.modelRelations = this.indexer.relationMaps[ this.model.uuid ];
+    this.indexer = indexer;
   }
 
+  /* 
+  listener
+   */
   btnListeners ()
   {
     const closeBtn = document.getElementById( "element-details-box-close" );
