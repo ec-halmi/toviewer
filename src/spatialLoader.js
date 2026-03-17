@@ -8,7 +8,7 @@ import * as THREE from "three";
 
 export class SpatialLoader
 {
-  constructor( components, world, model, highlightloader )
+  constructor( components, world, model, highlightloader, indexer )
   {
     this.components = components;
     this.world = world;
@@ -27,14 +27,9 @@ export class SpatialLoader
       models: [ this.model.uuid ],
     } );
 
-    this.indexer = this.components.get( this.components.OBC.IfcRelationsIndexer );
-
     const fragmentsManager = this.components.get( this.components.OBC.FragmentsManager );
 
-    fragmentsManager.onFragmentsLoaded.add( async ( model ) =>
-    {
-      if ( model.hasProperties ) await this.indexer.process( model );
-    } );
+    this.indexer = indexer;
 
     const serializedRelations = this.indexer.serializeModelRelations( this.model );
     this.jsonData = JSON.parse( serializedRelations );
@@ -52,14 +47,14 @@ export class SpatialLoader
        * - reset color and tree selection
        * - hide spaces
        */
-      /* const toolbar = document.getElementById( "toolbar" );
+      const toolbar = document.getElementById( "toolbar" );
       toolbar.addEventListener( "click", ( e ) =>
       {
         if ( this.selectedItem !== null )
         {
           this.selectedItem.classList.remove( "active" );
         }
-      } ); */
+      } );
     } ).then( () =>
     {
       /** hash handler
@@ -71,7 +66,7 @@ export class SpatialLoader
       window.addEventListener( "hashchange", () => this.expressIdUrlHandler.call( this ) );
     } );
 
-    this.propertiesLoader = new PropertiesLoader( this.components, this.world );
+    this.propertiesLoader = new PropertiesLoader( this.components, this.world, this.indexer );
   }
 
   /** generate the model browser
@@ -272,7 +267,6 @@ export class SpatialLoader
           {
             // close infobox
             await this.propertiesLoader.display( {}, false );
-            this.propertiesLoader.btnListeners();
             // remove all selections
             body.classList.remove( "active" );
             // reset all colors
@@ -319,7 +313,6 @@ export class SpatialLoader
   _createAccordian ()
   {
     const parent = document.createElement( "div" );
-    // parent.id = self.crypto.randomUUID();
     parent.id = this.generateUUID();
 
     parent.classList.add( "accordion", "accordion-flush" );
