@@ -223,6 +223,14 @@ export class SpatialLoader
       button.setAttribute( "aria-controls", id );
       button.innerHTML = title;
 
+      if ( expressId !== null && Number.isInteger( expressId ) )
+      {
+        button.classList.add( "d-flex", "align-items-center" ); // make icons to the left
+        const infoBtn = this._createElemInfoIcn( expressId );
+        infoBtn.classList.add( "p-0", "pe-1" );
+        button.prepend( infoBtn );
+      }
+
       header.append( button );
       item.append( header );
 
@@ -244,13 +252,6 @@ export class SpatialLoader
         body.id = expressId;
         body.classList.add( "ifc-element", "user-select-none" );
         body.setAttribute( "data-expressId", expressId );
-
-        // add info icon
-        body.classList.add( "d-flex", "align-items-center" ); // make icons to the left
-        const infoBtn = document.createElement( "i" );
-        infoBtn.classList.add( "material-symbols-outlined" );
-        infoBtn.classList.add( "px-1" );
-        infoBtn.innerHTML = "info";
 
         /** row listener
          * make row active
@@ -289,16 +290,10 @@ export class SpatialLoader
           }
         } );
 
-        /** icon listener
-         * show infobox
-         */
-        infoBtn.addEventListener( "click", async e =>
-        {
-          e.stopPropagation(); // prevent bubbling to parent
-          e.preventDefault;
-
-          await this.propertiesLoader.display( { id: parseInt( expressId ) } );
-        } );
+        // add info icon
+        body.classList.add( "d-flex", "align-items-center" ); // make icons to the left
+        const infoBtn = this._createElemInfoIcn( expressId );
+        infoBtn.classList.add( "ps-3", "pe-1" );
         body.prepend( infoBtn );
       }
     }
@@ -308,6 +303,30 @@ export class SpatialLoader
     item.append( body );
 
     return item;
+  }
+
+  /** _createElemInfoIcn
+   * 
+   * creates the info button for element
+   * 
+   * @param {number} expressId 
+   * @returns button object
+   */
+  _createElemInfoIcn ( expressId )
+  {
+    const infoBtn = document.createElement( "i" );
+    infoBtn.classList.add( "material-symbols-outlined" );
+    infoBtn.innerHTML = "info";
+    // icon listener, show infobox
+    infoBtn.addEventListener( "click", async e =>
+    {
+      e.stopPropagation(); // prevent bubbling to parent
+      e.preventDefault;
+
+      await this.propertiesLoader.display( { id: parseInt( expressId ) } );
+    } );
+
+    return infoBtn;
   }
 
   _createAccordian ()
@@ -517,7 +536,7 @@ export class SpatialLoader
               subAcc.append( subItem );
             }
 
-            byElem = this._createAccordianItem( elemsAccordian.id, elem[ 1 ], subAcc );
+            byElem = this._createAccordianItem( elemsAccordian.id, elem[ 1 ], subAcc, elem[ 0 ] );
           }
 
           elemsAccordian.append( byElem );
