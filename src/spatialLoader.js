@@ -8,7 +8,7 @@ import * as THREE from "three";
 
 export class SpatialLoader
 {
-  constructor( components, world, model, highlightloader )
+  constructor( components, world, model, highlightloader, indexer )
   {
     this.components = components;
     this.world = world;
@@ -27,14 +27,9 @@ export class SpatialLoader
       models: [ this.model.uuid ],
     } );
 
-    this.indexer = this.components.get( this.components.OBC.IfcRelationsIndexer );
-
     const fragmentsManager = this.components.get( this.components.OBC.FragmentsManager );
 
-    fragmentsManager.onFragmentsLoaded.add( async ( model ) =>
-    {
-      if ( model.hasProperties ) await this.indexer.process( model );
-    } );
+    this.indexer = indexer;
 
     const serializedRelations = this.indexer.serializeModelRelations( this.model );
     this.jsonData = JSON.parse( serializedRelations );
@@ -52,14 +47,14 @@ export class SpatialLoader
        * - reset color and tree selection
        * - hide spaces
        */
-      /* const toolbar = document.getElementById( "toolbar" );
+      const toolbar = document.getElementById( "toolbar" );
       toolbar.addEventListener( "click", ( e ) =>
       {
         if ( this.selectedItem !== null )
         {
           this.selectedItem.classList.remove( "active" );
         }
-      } ); */
+      } );
     } ).then( () =>
     {
       /** hash handler
@@ -71,7 +66,7 @@ export class SpatialLoader
       window.addEventListener( "hashchange", () => this.expressIdUrlHandler.call( this ) );
     } );
 
-    this.propertiesLoader = new PropertiesLoader( this.components, this.world );
+    this.propertiesLoader = new PropertiesLoader( this.components, this.world, this.indexer );
   }
 
   /** generate the model browser
@@ -228,6 +223,14 @@ export class SpatialLoader
       button.setAttribute( "aria-controls", id );
       button.innerHTML = title;
 
+      if ( expressId !== null && Number.isInteger( expressId ) )
+      {
+        button.classList.add( "d-flex", "align-items-center" ); // make icons to the left
+        const infoBtn = this._createElemInfoIcn( expressId );
+        infoBtn.classList.add( "p-0", "pe-1" );
+        button.prepend( infoBtn );
+      }
+
       header.append( button );
       item.append( header );
 
@@ -250,13 +253,6 @@ export class SpatialLoader
         body.classList.add( "ifc-element", "user-select-none" );
         body.setAttribute( "data-expressId", expressId );
 
-        // add info icon
-        body.classList.add( "d-flex", "align-items-center" ); // make icons to the left
-        const infoBtn = document.createElement( "i" );
-        infoBtn.classList.add( "material-symbols-outlined" );
-        infoBtn.classList.add( "px-1" );
-        infoBtn.innerHTML = "info";
-
         /** row listener
          * make row active
          * highlight and select element
@@ -272,7 +268,6 @@ export class SpatialLoader
           {
             // close infobox
             await this.propertiesLoader.display( {}, false );
-            this.propertiesLoader.btnListeners();
             // remove all selections
             body.classList.remove( "active" );
             // reset all colors
@@ -295,15 +290,10 @@ export class SpatialLoader
           }
         } );
 
-        /** icon listener
-         * show infobox
-         */
-        infoBtn.addEventListener( "click", async e =>
-        {
-          // fragment = null;
-
-          await this.propertiesLoader.display( { id: parseInt( expressId ) } );
-        } );
+        // add info icon
+        body.classList.add( "d-flex", "align-items-center" ); // make icons to the left
+        const infoBtn = this._createElemInfoIcn( expressId );
+        infoBtn.classList.add( "ps-3", "pe-1" );
         body.prepend( infoBtn );
       }
     }
@@ -315,10 +305,33 @@ export class SpatialLoader
     return item;
   }
 
+  /** _createElemInfoIcn
+   * 
+   * creates the info button for element
+   * 
+   * @param {number} expressId 
+   * @returns button object
+   */
+  _createElemInfoIcn ( expressId )
+  {
+    const infoBtn = document.createElement( "i" );
+    infoBtn.classList.add( "material-symbols-outlined" );
+    infoBtn.innerHTML = "info";
+    // icon listener, show infobox
+    infoBtn.addEventListener( "click", async e =>
+    {
+      e.stopPropagation(); // prevent bubbling to parent
+      e.preventDefault;
+
+      await this.propertiesLoader.display( { id: parseInt( expressId ) } );
+    } );
+
+    return infoBtn;
+  }
+
   _createAccordian ()
   {
     const parent = document.createElement( "div" );
-    // parent.id = self.crypto.randomUUID();
     parent.id = this.generateUUID();
 
     parent.classList.add( "accordion", "accordion-flush" );
@@ -523,7 +536,7 @@ export class SpatialLoader
               subAcc.append( subItem );
             }
 
-            byElem = this._createAccordianItem( elemsAccordian.id, elem[ 1 ], subAcc );
+            byElem = this._createAccordianItem( elemsAccordian.id, elem[ 1 ], subAcc, elem[ 0 ] );
           }
 
           elemsAccordian.append( byElem );

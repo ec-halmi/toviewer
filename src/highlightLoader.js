@@ -7,7 +7,7 @@ import { VisibilityLoader } from "./visibilityLoader";
 
 export class HighlightLoader
 {
-  constructor( components, world )
+  constructor( components, world, indexer )
   {
     this.components = components;
     this.world = world;
@@ -33,7 +33,7 @@ export class HighlightLoader
     this.highlightDblClickEvent();
 
     // Loads properties class
-    this.propertiesLoader = new PropertiesLoader( this.components, this.world );
+    this.propertiesLoader = new PropertiesLoader( this.components, this.world, indexer );
   }
 
   /** implement clicks on element

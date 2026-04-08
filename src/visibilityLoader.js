@@ -14,12 +14,6 @@ export class VisibilityLoader
     this.hider = this.components.get( this.components.OBC.Hider );
     // classifier
     this.classifier = this.components.get( this.components.OBC.Classifier );
-
-    // get indexer
-    this.indexer = this.components.get( this.components.OBC.IfcRelationsIndexer );
-    this.indexer.process( this.model );
-    const serializedRelations = this.indexer.serializeModelRelations( this.model );
-    this.jsonData = JSON.parse( serializedRelations );
   }
 
   // enable

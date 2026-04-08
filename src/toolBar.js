@@ -12,19 +12,20 @@ export class ToolBarLoader
     this.model = model
     this.highlighter = highlight;
 
+    // visibility
+    // show/hide elements by storey, ifc category, with reset view button
+    this.btnVisibility();
+
     // viewer reset
     this.btnResetViewer();
 
     // camera reset
     this.btnResetCamera();
 
-    // visibility
-    // show/hide elements by storey, ifc category, with reset view button
-    this.btnVisibility();
-
     // enable camera loader
     this.camera = new CameraLoader( this.components, this.world );
 
+    // enable 1st person camera
     this.btnCameraFirstPerson();
 
     // camera-plan-view

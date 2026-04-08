@@ -85,6 +85,17 @@ export class FileLoader
         this.world.scene.three.add( model );
         this.world.meshes.add( model );
 
+        // Culler
+        console.log( "Adding cullers" );
+        const cullers = this.components.get( OBC.Cullers );
+        const culler = cullers.create( this.world );
+        culler.config.threshold = 100;
+        culler.needsUpdate = true;
+        this.world.camera.controls.addEventListener( "controlend", () =>
+        {
+          culler.needsUpdate = true;
+        } );
+
         this.world.model = model;
 
         return { world: this.world, model }; // @test
